@@ -7,7 +7,7 @@
 %           0.0, 0.0, 1.0, 0.1, 1.0;...
 %           0.0, 0.0, 0.0, 1.0, 0.1;...
 %           0.0, -0.1, -0.3, -0.3, -0.3;...
-%           0.0, -0.8, -0.1, -0.3, -0.0]; 
+%           0.0, -0.8, -0.1, -0.3, -0.0]; 2
 % load('/home/asa/Modeling/adjMat.mat');
 load('Z:\Modeling\adjMat.mat');
 neuronLabels = {'stimulus', 'ORN', 'PN', 'LN_1', 'LN_2'};
@@ -40,10 +40,11 @@ networkActivity = zeros(length(nn), runTime);
 networkActivity(1, :) = stimulus;
 for timeStep = 301:runTime
     for i = 2:length(nn)
-%         nn(i).sumInputs(networkActivity, timeStep);
+        nn(i).sumInputs(networkActivity, timeStep);
         nn(i).leakyIntegrate(networkActivity, timeStep);
 
         nn(i).rectify(timeStep);
+        nn(i).saturate(timeStep);
         networkActivity(i, timeStep) = nn(i).Response(timeStep);
     end
 end

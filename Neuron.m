@@ -51,6 +51,12 @@ classdef Neuron < handle
                 n.Response(timeStep) = 0;
             end
         end
+        
+        function n = saturate(n, timeStep)
+            if n.Response(timeStep) > 1
+                n.Response(timeStep) = 1;
+            end
+        end
     end
 end
 
