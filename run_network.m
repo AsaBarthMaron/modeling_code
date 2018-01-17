@@ -8,11 +8,11 @@
 %           0.0, 0.0, 0.0, 1.0, 0.1;...
 %           0.0, -0.1, -0.3, -0.3, -0.3;...
 %           0.0, -0.8, -0.1, -0.3, -0.0]; 2
-% load('/home/asa/Modeling/adjMat.mat');
-load('Z:\Modeling\adjMat.mat');
+load('/home/asa/Modeling/adjMat.mat');
+% load('Z:\Modeling\adjMat.mat');
 neuronLabels = {'stimulus', 'ORN', 'PN', 'LN_1', 'LN_2'};
 % stimulus = [zeros(100,1); ones(300,1); zeros(200,1)];
-stimulus = [ones(1000,1)*0.1; ones(300,1); ones(200,1)*0.1];
+stimulus = [ones(1000,1)*0.2; ones(300,1); ones(200,1)*0.2];
 taus = [0 15 15 100 100];
 % taus = [0 10 15 150 150];
 
@@ -44,12 +44,14 @@ for timeStep = 301:runTime
         nn(i).leakyIntegrate(networkActivity, timeStep);
 
         nn(i).rectify(timeStep);
-        nn(i).saturate(timeStep);
+%         nn(i).saturate(timeStep);
         networkActivity(i, timeStep) = nn(i).Response(timeStep);
     end
+    
 end
 figure
 plot(networkActivity', 'linewidth', 2)
 legend(neuronLabels)
 set(gca, 'box', 'off', 'fontsize', 20)
 % axis([0 1000 0 10])
+set(gcf, 'position', [0 0 1920 1200])
