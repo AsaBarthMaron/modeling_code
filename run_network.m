@@ -15,6 +15,7 @@ neuronLabels = {'stimulus', 'ORN', 'PN', 'LN_1', 'LN_2'};
 stimulus = [ones(1000,1)*0.2; ones(300,1); ones(200,1)*0.2];
 taus = [0 15 15 100 100];
 % taus = [0 10 15 150 150];
+% adjMat(1,2) = 1;
 
 timeStep = 1;
 stepSize = 5;
@@ -31,7 +32,7 @@ for i = 1:length(nn)
     nn(i).RunTime = runTime;
     nn(i).Tau = taus(i);
     nn(i).TauKrn = exp((1:300)/nn(i).Tau);
-    nn(i).TauKrn = nn(i).TauKrn ./ max(nn(i).TauKrn);
+    nn(i).TauKrn = nn(i).TauKrn ./ sum(nn(i).TauKrn);
     nn(i).Inputs = adjMat(:,i);
     nn(i).Response(timeStep) = 0;
 end
@@ -41,7 +42,7 @@ networkActivity(1, :) = stimulus;
 for timeStep = 301:runTime
     for i = 2:length(nn)
         nn(i).sumInputs(networkActivity, timeStep);
-        nn(i).leakyIntegrate(networkActivity, timeStep);
+        nn(i).tauIntegrate(networkActivity, timeStep);
 
         nn(i).rectify(timeStep);
 %         nn(i).saturate(timeStep);
@@ -51,7 +52,8 @@ for timeStep = 301:runTime
 end
 figure
 plot(networkActivity', 'linewidth', 2)
-legend(neuronLabels)
+legend(neuronLabels, 'location', 'northwest')
 set(gca, 'box', 'off', 'fontsize', 20)
 % axis([0 1000 0 10])
 set(gcf, 'position', [0 0 1920 1200])
+% set(gcf, 'position', [0 0 960 600])

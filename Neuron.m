@@ -27,7 +27,7 @@ classdef Neuron < handle
             n.NSteps = n.RunTime ./ n.StepSize;
             n.Tau = 15;
             n.TauKrn = exp((1:300)/n.Tau);
-            n.TauKrn = n.TauKrn ./ max(n.TauKrn);
+            n.TauKrn = n.TauKrn ./ sum(n.TauKrn);
             n.Inputs = [];
             n.InputResponse = zeros(n.NSteps, 1);
             n.Response = zeros(n.NSteps, 1);
@@ -39,10 +39,11 @@ classdef Neuron < handle
             n.Response(timeStep) = n.Inputs' * networkActivity(:, timeStep -1);
         end
         
-        function n = leakyIntegrate(n, networkActivity, timeStep)
-            %  LEAKYINTEGRATE calculates Response using decay time constant
-            %  Tau
-            linearInput = networkActivity(:, timeStep-length(n.TauKrn):timeStep-1) .* n.Inputs;
+        function n = tauIntegrate(n, networkActivity, timeStep)
+            %  TAUINTEGRATE calculates Response using time constant Tau
+            linearInput = bsxfun(@times, ...
+                networkActivity(:, timeStep-length(n.TauKrn):timeStep-1),...
+                n.Inputs);
             n.Response(timeStep) =  sum(linearInput * n.TauKrn');
         end
             
