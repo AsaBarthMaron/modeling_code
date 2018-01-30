@@ -11,8 +11,13 @@ classdef Neuron < handle
         Tau             % Time constant of neuron
         TauKrn          % Exponential decay kernel
         Inputs          % Connection weights from other neurons in Network
-        InputResponse   % Integrated synaptic responses, could be as simple as a linear combination. Proxy for subthreshold 
-        Response        % Output response of the neuron, proxy for firing rate
+        Vm              % Proxy for subthreshold voltage (not in proper units)
+        FR              % Proxy for firing rate (not necessarily in spk/s)
+        Rel             % Proxy for synaptic release. The quantity that downstream neurons actually see.
+        DepletionRate   % Rate of synaptic resource depletion
+        TauRepleneshment% Tau of synaptic resource repleneshment 
+        IntegratedFR    % Integral of FR 
+        SynRes          % Synaptic resources
     end
     
     methods
@@ -29,28 +34,48 @@ classdef Neuron < handle
             n.TauKrn = exp((1:300)/n.Tau);
             n.TauKrn = n.TauKrn ./ sum(n.TauKrn);
             n.Inputs = [];
-            n.InputResponse = zeros(n.NSteps, 1);
-            n.Response = zeros(n.NSteps, 1);
+            n.Vm = zeros(n.NSteps, 1);
+            n.FR = zeros(n.NSteps, 1);
+            n.Rel = zeros(n.NSteps, 1);
+            n.SynRes = ones(n.NSteps, 1);
+            n.IntegratedFR = zeros(n.NSteps, 1);
+            n.DepletionRate = 0.23;     % Taken from Kathy's paper
+            n.TauRepleneshment = 1000; % Taken from Kathy's paper
+            
         end
         
         function n = sumInputs(n, networkActivity, timeStep)
             %  SUMINPUTS does a dot product of networkActivity and
             %  n.Inputs to calculate a linear input resposne
-            n.Response(timeStep) = n.Inputs' * networkActivity(:, timeStep -1);
+            n.Vm(timeStep) = n.Inputs' * networkActivity(:, timeStep -1);
         end
         
         function n = tauIntegrate(n, networkActivity, timeStep)
-            %  TAUINTEGRATE calculates Response using time constant Tau
+            %  TAUINTEGRATE filters Vm using time constant Tau
             linearInput = bsxfun(@times, ...
                 networkActivity(:, timeStep-length(n.TauKrn):timeStep-1),...
                 n.Inputs);
-            n.Response(timeStep) =  sum(linearInput * n.TauKrn');
+            n.Vm(timeStep) =  sum(linearInput * n.TauKrn');
         end
             
         function n = rectify(n, timeStep)
-            if n.Response(timeStep) < 0
-                n.Response(timeStep) = 0;
+            % RECTIFY does half-wave rectification on Vm to generate FR
+            if n.Vm(timeStep) < 0
+                n.FR(timeStep) = 0;
+            else
+                n.FR(timeStep) = n.Vm(timeStep);
             end
+        end
+        
+        function calcResources(n, timeStep)
+            % CALCRESOURCES uses methods described in my 2018-01-24
+            % evernote note to calculate the synaptic resources
+            
+            % First step is to calculate the integral of d*r(t) + (1/Ta)
+            % or: DepletionRate * FR + (1/TauRepleneshment)
+            Y = exp(cumtrapz((n.DepletionRate .* n.FR) + (1/n.TauRepleneshment)));
+            LHS = (cumtrapz(Y) ./ (Y .* n.TauRepleneshment)) + (1 ./ Y);
+            n.SynRes = LHS;
         end
         
         function n = saturate(n, timeStep)
