@@ -2,7 +2,7 @@
 % set inputs based on entries in matrix
 % set network StepSize and RunTime
 
-
+clear
 % adjMat = [0.0, 1.0, 0.0, 0.0, 0.0;... 
 %           0.0, 0.0, 1.0, 0.1, 1.0;...
 %           0.0, 0.0, 0.0, 1.0, 0.1;...
@@ -11,18 +11,20 @@
 % load('/home/asa/Modeling/adjMat.mat');
 load('Z:\Modeling\adjMat.mat');
 neuronLabels = {'stimulus', 'ORN', 'PN', 'LN_1', 'LN_2'};
+spontRate = 10;
+stimRate = 50;
 
 sampRate = 1000;
-impulse{1} = [ones((0.02 * sampRate),1)*1; ones((0.08 * sampRate),1)*0.2];
-impulse{2} = [ones((0.2 * sampRate),1)*1; ones((0.38 * sampRate),1)*0.2];
-impulse{3} = [ones((2 * sampRate),1)*1; ones((1.58 * sampRate),1)*0.2];
+impulse{1} = [ones((0.02 * sampRate),1)*stimRate; ones((0.08 * sampRate),1)*spontRate];
+impulse{2} = [ones((0.2 * sampRate),1)*stimRate; ones((0.38 * sampRate),1)*spontRate];
+impulse{3} = [ones((2 * sampRate),1)*stimRate; ones((1.58 * sampRate),1)*spontRate];
     
-% stimulus = [ones(2000,1)*0.2; repmat(impulse{1}, 60, 1); ones(1000,1)*0.2];
-% stimulus = [ones(2000,1)*0.2; repmat(impulse{2}, 10, 1); ones(1000,1)*0.2];
-% stimulus = [ones(2000,1)*0.2; repmat(impulse{3}, 2, 1); ones(1000,1)*0.2];
+% stimulus = [ones(2000,1 )*spontRate; repmat(impulse{1}, 60, 1); ones(1000,1)*spontRate];
+% stimulus = [ones(2000,1)*spontRate; repmat(impulse{2}, 10, 1); ones(1000,1)*spontRate];
+% stimulus = [ones(2000,1)*spontRate; repmat(impulse{3}, 2, 1); ones(1000,1)*spontRate];
 
-stimulus = [ones(2000,1)*0.2; ones(300,1); ones(1000,1)*0.2];
-% stimulus = [ones(2000,1)*0.2; [sin([1:1:300]/10) + 1]'; ones(1000,1)*0.2];
+stimulus = [ones(2000,1)*spontRate; ones(300,1)*stimRate; ones(1000,1)*spontRate];
+% stimulus = [ones(2000,1)*spontRate; [sin([1:1:300]/10) + 1]' * stimRate; ones(1000,1)*spontRate];
 taus = [0 15 15 100 100];
 % taus = [0 10 15 150 150];
 % adjMat(1,2) = 1;
@@ -56,7 +58,12 @@ networkActivity = zeros(length(nn), runTime);
 networkActivity(1, :) = stimulus;
 for timeStep = 301:runTime
     for i = 2:length(nn)
-        nn(i).sumInputs(networkActivity, timeStep);
+%         if i > 2
+%             nn(i).tauIntegrate(networkActivity, timeStep);
+%         elseif i == 2
+%             nn(i).ornInputs(networkActivity, timeStep);
+%         end
+%         nn(i).sumInputs(networkActivity, timeStep);
         nn(i).tauIntegrate(networkActivity, timeStep);
 
         nn(i).rectify(timeStep);

@@ -39,8 +39,8 @@ classdef Neuron < handle
             n.Rel = zeros(n.NSteps, 1);
             n.SynRes = ones(n.NSteps, 1);
             n.IntegratedFR = zeros(n.NSteps, 1);
-            n.DepletionRate = 0.23;     % Taken from Kathy's paper
-            n.TauRepleneshment = 1000; % Taken from Kathy's paper
+            n.DepletionRate = 0.23 * 1e-3;     % Taken from Kathy's paper, units in terms of fraction per spike
+            n.TauRepleneshment = 1000; % Taken from Kathy's paper, units of ms
             
         end
         
@@ -48,6 +48,14 @@ classdef Neuron < handle
             %  SUMINPUTS does a dot product of networkActivity and
             %  n.Inputs to calculate a linear input resposne
             n.Vm(timeStep) = n.Inputs' * networkActivity(:, timeStep -1);
+        end
+        
+        function n = ornInputs(n, networkActivity, timeStep)
+            %  SUMINPUTS does a dot product of networkActivity and
+            %  n.Inputs to calculate a linear input resposne
+            n.Vm(timeStep) = n.Inputs(1)' * networkActivity(1, timeStep -1);
+            inhibition = n.Inputs(4:5)' * networkActivity(4:5, timeStep -1);
+            n.Vm(timeStep) = n.Vm(timeStep) ./ inhibition;
         end
         
         function n = tauIntegrate(n, networkActivity, timeStep)
@@ -73,8 +81,10 @@ classdef Neuron < handle
             
             % First step is to calculate the integral of d*r(t) + (1/Ta)
             % or: DepletionRate * FR + (1/TauRepleneshment)
-            Y = exp(cumtrapz((n.DepletionRate .* n.FR) + (1/n.TauRepleneshment)));
+            Y = exp(cumtrapz((n.DepletionRate .* n.FR(1:timeStep)) + (1/n.TauRepleneshment)));
+            Y(Y == Inf) = realmax;
             LHS = (cumtrapz(Y) ./ (Y .* n.TauRepleneshment)) + (1 ./ Y);
+            LHS(isnan(LHS)) = 0;
             n.SynRes = LHS;
         end
         
