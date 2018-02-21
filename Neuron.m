@@ -53,8 +53,11 @@ classdef Neuron < handle
         function n = ornInputs(n, networkActivity, timeStep)
             %  SUMINPUTS does a dot product of networkActivity and
             %  n.Inputs to calculate a linear input resposne
-            n.Vm(timeStep) = n.Inputs(1)' * networkActivity(1, timeStep -1);
-            inhibition = n.Inputs(4:5)' * networkActivity(4:5, timeStep -1);
+            filteredInput =  networkActivity(:, timeStep-length(n.TauKrn):timeStep-1)...
+                             .* n.TauKrn;
+            filteredInput = sum(filteredInput, 2);
+            n.Vm(timeStep) = n.Inputs(1)' * filteredInput(1);
+            inhibition = abs(n.Inputs(4:5))' * filteredInput(4:5);
             n.Vm(timeStep) = n.Vm(timeStep) ./ inhibition;
         end
         

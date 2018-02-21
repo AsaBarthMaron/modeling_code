@@ -13,6 +13,7 @@ load('Z:\Modeling\adjMat.mat');
 neuronLabels = {'stimulus', 'ORN', 'PN', 'LN_1', 'LN_2'};
 spontRate = 10;
 stimRate = 50;
+% adjMat(1,2) = 1;
 
 sampRate = 1000;
 impulse{1} = [ones((0.02 * sampRate),1)*stimRate; ones((0.08 * sampRate),1)*spontRate];
@@ -47,24 +48,24 @@ for i = 1:length(nn)
     nn(i).TauKrn = exp((1:300)/nn(i).Tau);
     nn(i).TauKrn = nn(i).TauKrn ./ sum(nn(i).TauKrn);
     nn(i).Inputs = adjMat(:,i);
-    nn(i).Vm = zeros(nn(i).NSteps, 1);
-    nn(i).FR = zeros(nn(i).NSteps, 1);
-    nn(i).Rel = zeros(nn(i).NSteps, 1);
+    nn(i).Vm = ones(nn(i).NSteps, 1);
+    nn(i).FR = ones(nn(i).NSteps, 1);
+    nn(i).Rel = ones(nn(i).NSteps, 1);
     nn(i).SynRes = ones(nn(i).NSteps, 1);
     nn(i).IntegratedFR = zeros(nn(i).NSteps, 1);
 end
 
-networkActivity = zeros(length(nn), runTime);
+networkActivity = ones(length(nn), runTime);
 networkActivity(1, :) = stimulus;
 for timeStep = 301:runTime
     for i = 2:length(nn)
-%         if i > 2
-%             nn(i).tauIntegrate(networkActivity, timeStep);
-%         elseif i == 2
-%             nn(i).ornInputs(networkActivity, timeStep);
-%         end
+        if i > 2
+            nn(i).tauIntegrate(networkActivity, timeStep);
+        elseif i == 2
+            nn(i).ornInputs(networkActivity, timeStep);
+        end
 %         nn(i).sumInputs(networkActivity, timeStep);
-        nn(i).tauIntegrate(networkActivity, timeStep);
+%         nn(i).tauIntegrate(networkActivity, timeStep);
 
         nn(i).rectify(timeStep);
         nn(i).Rel(timeStep) = nn(i).FR(timeStep);
