@@ -1,8 +1,9 @@
+function networkActivity = run_network(stimImpulse, stimRate)
 % adjacency matrix
 % set inputs based on entries in matrix
 % set network StepSize and RunTime
 
-clear
+% clear
 % adjMat = [0.0, 1.0, 0.0, 0.0, 0.0;... 
 %           0.0, 0.0, 1.0, 0.1, 1.0;...
 %           0.0, 0.0, 0.0, 1.0, 0.1;...
@@ -12,7 +13,7 @@ clear
 load('Z:\Modeling\adjMat.mat');
 neuronLabels = {'stimulus', 'ORN', 'PN', 'LN_1', 'LN_2'};
 spontRate = 10;
-stimRate = 50;
+% stimRate = 50;
 % adjMat(1,2) = 1;
 
 sampRate = 1000;
@@ -24,11 +25,11 @@ impulse{3} = [ones((2 * sampRate),1)*stimRate; ones((1.58 * sampRate),1)*spontRa
 % stimulus = [ones(2000,1)*spontRate; repmat(impulse{2}, 10, 1); ones(1000,1)*spontRate];
 % stimulus = [ones(2000,1)*spontRate; repmat(impulse{3}, 2, 1); ones(1000,1)*spontRate];
 
-stimulus = [ones(2000,1)*spontRate; ones(300,1)*stimRate; ones(1000,1)*spontRate];
+stimulus = [ones(2000,1)*spontRate; stimImpulse; ones(1000,1)*spontRate];
 % stimulus = [ones(2000,1)*spontRate; [sin([1:1:300]/10) + 1]' * stimRate; ones(1000,1)*spontRate];
 taus = [0 15 15 100 100];
 % taus = [0 10 15 150 150];
-% adjMat(1,2) = 1;
+adjMat(1,2) = 1;
 
 timeStep = 1;
 stepSize = 1;
@@ -73,6 +74,8 @@ for timeStep = 301:runTime
 %         nn(i).saturate(timeStep);
         networkActivity(i, timeStep) = nn(i).FR(timeStep);
         a(i, timeStep) = nn(i).FR(timeStep);
+%         networkActivity(4, timeStep) = 1;
+        networkActivity(5, timeStep) = 1;
     end
 %     networkActivity(2:5, timeStep) = networkActivity(2:5,timeStep) + (rand(4,1)/1000);
     networkActivity(2, timeStep) = networkActivity(2, timeStep) * nn(2).SynRes(timeStep);
@@ -81,16 +84,16 @@ for timeStep = 301:runTime
 %     networkActivity(5, timeStep) = networkActivity(2, timeStep) * nn(5).SynRes(timeStep);
 end
 %%
-yLims(2) = max(max(networkActivity(2:end, 1000:end)));
-yLims(2) = yLims(2) * 1.5;
-yLims(1) = 0;
-a(1, :) = networkActivity(1,:);
-networkActivity(1,:) = ((networkActivity(1,:) / max(networkActivity(1,:))) * yLims(2)/10) + (0.8 * yLims(2));
-figure
-plot(1000:runTime, networkActivity(:,1000:end)', 'linewidth', 2)
-ylim = yLims;
-legend(neuronLabels, 'location', 'west')
-set(gca, 'box', 'off', 'fontsize', 20, 'ylim', yLims)
-% axis([0 1000 0 10])
-set(gcf, 'position', [0 0 1920 1200])
-% set(gcf, 'position', [0 0 960 600])
+% yLims(2) = max(max(networkActivity(2:end, 1000:end)));
+% yLims(2) = yLims(2) * 1.5;
+% yLims(1) = 0;
+% a(1, :) = networkActivity(1,:);
+% networkActivity(1,:) = ((networkActivity(1,:) / max(networkActivity(1,:))) * yLims(2)/10) + (0.8 * yLims(2));
+% figure
+% plot(1000:runTime, networkActivity(:,1000:end)', 'linewidth', 2)
+% ylim = yLims;
+% legend(neuronLabels, 'location', 'west')
+% set(gca, 'box', 'off', 'fontsize', 20, 'ylim', yLims)
+% % axis([0 1000 0 10])
+% set(gcf, 'position', [0 0 1920 1200])
+% % set(gcf, 'position', [0 0 960 600])
