@@ -29,7 +29,7 @@ stimulus = [ones(2000,1)*spontRate; stimImpulse; ones(1000,1)*spontRate];
 % stimulus = [ones(2000,1)*spontRate; [sin([1:1:300]/10) + 1]' * stimRate; ones(1000,1)*spontRate];
 taus = [0 15 15 100 100];
 % taus = [0 10 15 150 150];
-adjMat(1,2) = 1;
+% adjMat(1,2) = 1;
 
 timeStep = 1;
 stepSize = 1;
@@ -46,7 +46,12 @@ for i = 1:length(nn)
     nn(i).RunTime = runTime;
     nn(i).NSteps = nn(i).RunTime ./ nn(i).StepSize;
     nn(i).Tau = taus(i);
-    nn(i).TauKrn = exp((1:300)/nn(i).Tau);
+    nn(i).TauKrn = exp(-(1:300)/nn(i).Tau);
+    nn(i).TauKrn = fliplr(nn(i).TauKrn);
+    if i > 5
+        nn(i).TauKrn = (1:300) .* exp(-(1:300)/nn(i).Tau);
+        nn(i).TauKrn = fliplr(nn(i).TauKrn);
+    end
     nn(i).TauKrn = nn(i).TauKrn ./ sum(nn(i).TauKrn);
     nn(i).Inputs = adjMat(:,i);
     nn(i).Vm = ones(nn(i).NSteps, 1);
@@ -75,7 +80,7 @@ for timeStep = 301:runTime
         networkActivity(i, timeStep) = nn(i).FR(timeStep);
         a(i, timeStep) = nn(i).FR(timeStep);
 %         networkActivity(4, timeStep) = 1;
-        networkActivity(5, timeStep) = 1;
+%         networkActivity(5, timeStep) = 1;
     end
 %     networkActivity(2:5, timeStep) = networkActivity(2:5,timeStep) + (rand(4,1)/1000);
     networkActivity(2, timeStep) = networkActivity(2, timeStep) * nn(2).SynRes(timeStep);
@@ -84,16 +89,16 @@ for timeStep = 301:runTime
 %     networkActivity(5, timeStep) = networkActivity(2, timeStep) * nn(5).SynRes(timeStep);
 end
 %%
-% yLims(2) = max(max(networkActivity(2:end, 1000:end)));
-% yLims(2) = yLims(2) * 1.5;
-% yLims(1) = 0;
-% a(1, :) = networkActivity(1,:);
-% networkActivity(1,:) = ((networkActivity(1,:) / max(networkActivity(1,:))) * yLims(2)/10) + (0.8 * yLims(2));
-% figure
-% plot(1000:runTime, networkActivity(:,1000:end)', 'linewidth', 2)
-% ylim = yLims;
-% legend(neuronLabels, 'location', 'west')
-% set(gca, 'box', 'off', 'fontsize', 20, 'ylim', yLims)
-% % axis([0 1000 0 10])
-% set(gcf, 'position', [0 0 1920 1200])
-% % set(gcf, 'position', [0 0 960 600])
+yLims(2) = max(max(networkActivity(2:end, 1000:end)));
+yLims(2) = yLims(2) * 1.5;
+yLims(1) = 0;
+a(1, :) = networkActivity(1,:);
+networkActivity(1,:) = ((networkActivity(1,:) / max(networkActivity(1,:))) * yLims(2)/10) + (0.8 * yLims(2));
+figure
+plot(1000:runTime, networkActivity(:,1000:end)', 'linewidth', 2)
+ylim = yLims;
+legend(neuronLabels, 'location', 'west')
+set(gca, 'box', 'off', 'fontsize', 20, 'ylim', yLims)
+% axis([0 1000 0 10])
+set(gcf, 'position', [0 0 1920 1200])
+% set(gcf, 'position', [0 0 960 600])
