@@ -9,7 +9,7 @@ classdef Neuron < handle
         NSteps          % # of time steps
         RunTime         % Duration of trial run
         Tau             % Time constant of neuron
-        TauKrn          % Exponential decay kernel
+        TauKrn          % Dynamics kernel
         Inputs          % Connection weights from other neurons in Network
         Vm              % Proxy for subthreshold voltage (not in proper units)
         FR              % Proxy for firing rate (not necessarily in spk/s)
@@ -50,19 +50,27 @@ classdef Neuron < handle
             n.Vm(timeStep) = n.Inputs' * networkActivity(:, timeStep -1);
         end
         
-        function n = ornInputs(n, networkActivity, timeStep)
-            %  SUMINPUTS does a dot product of networkActivity and
-            %  n.Inputs to calculate a linear input resposne
+        function n = calcResponses(n, networkActivity, timeStep, isDiv)
+            %  CALCRESPONSES calculates the responses (Vm) using linear
+            %  integration and filters with TauKrn. Inhibitory (input)
+            %  connections can be either subtractive or divisive, as 
+            %  specified by the logical vector isDiv. 
+            notDiv = ~isDiv;
             filteredInput =  networkActivity(:, timeStep-length(n.TauKrn):timeStep-1)...
                              .* n.TauKrn;
             filteredInput = sum(filteredInput, 2);
-            n.Vm(timeStep) = n.Inputs(1)' * filteredInput(1);
-            inhibition = abs(n.Inputs(4:5))' * filteredInput(4:5);
-            n.Vm(timeStep) = n.Vm(timeStep) ./ inhibition;
+            n.Vm(timeStep) = n.Inputs(notDiv)' * filteredInput(notDiv);
+            inhibition = abs(n.Inputs(isDiv))' * filteredInput(isDiv);
+%             if inhibition < 1
+%                 inhibition = 1;
+%             end
+            if inhibition > 0 
+                n.Vm(timeStep) = n.Vm(timeStep) ./ inhibition;
+            end
         end
         
         function n = tauIntegrate(n, networkActivity, timeStep)
-            %  TAUINTEGRATE filters Vm using time constant Tau
+            %  TAUINTEGRATE filters Vm using dynamics kernel TauKrn
             linearInput = bsxfun(@times, ...
                 networkActivity(:, timeStep-length(n.TauKrn):timeStep-1),...
                 n.Inputs);
@@ -81,7 +89,6 @@ classdef Neuron < handle
         function calcResources(n, timeStep)
             % CALCRESOURCES uses methods described in my 2018-01-24
             % evernote note to calculate the synaptic resources
-            
             % First step is to calculate the integral of d*r(t) + (1/Ta)
             % or: DepletionRate * FR + (1/TauRepleneshment)
             Y = exp(cumtrapz((n.DepletionRate .* n.FR(1:timeStep)) + (1/n.TauRepleneshment)));
