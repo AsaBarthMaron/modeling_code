@@ -1,4 +1,4 @@
-function networkActivity = run_network(adjMat, neuronLabels, inhbCon, divCon, depCon, facCon, taus, kernType, stimulus)
+function networkActivity = run_network_working(adjMat, neuronLabels, inhbCon, divCon, depCon, facCon, taus, kernType, stimulus)
 % RUN_NETWORK creates a network and runs it for a single trial condition
 
 % Input parameters -
@@ -106,15 +106,10 @@ for timeStep = (kernLen + 1):runTime
         iDep = isDep(:,iN);
         inputActivity(iDep, timeStep-1) = networkRelease(iDep, timeStep-1);
         inputActivity(~iDep, timeStep-1) = networkFR(~iDep, timeStep-1);
-        
-        nn(iN).calcResponses(inputActivity, timeStep, ~isDiv(:, iN));
+        nn(iN).calcResponses(inputActivity, timeStep, isDiv(:, iN));
         nn(iN).rectify(timeStep);
-        nn(iN).Rel(timeStep) = nn(iN).FR(timeStep);
-        
-        nn(iN).divInhibition(inputActivity, timeStep, isDiv(:, iN));
         nn(iN).calcResources(timeStep);
-        
-        nn(iN).Rel(timeStep) = nn(iN).Rel(timeStep) * nn(iN).SynRes(timeStep);
+        nn(iN).Rel(timeStep) = nn(iN).FR(timeStep) * nn(iN).SynRes(timeStep);
         networkFR(iN, timeStep) = nn(iN).FR(timeStep); 
         networkRelease(iN, timeStep) = nn(iN).Rel(timeStep); 
     end
@@ -124,16 +119,12 @@ end
 % end
 networkActivity = inputActivity;
 %%
-networkActivity(2,:) = networkFR(2,:);
-yLims(2) = max(max(networkActivity(3:end, 1000:end)));
+yLims(2) = max(max(networkActivity(2:end, 1000:end)));
 yLims(2) = yLims(2) * 1.5;
 yLims(1) = 0;
 a(1, :) = networkActivity(1,:);
 networkActivity(1,:) = ((networkActivity(1,:) / max(networkActivity(1,:))) * yLims(2)/10) + (0.8 * yLims(2));
-networkActivity(2,:) = ((networkActivity(2,:) / max(networkActivity(2,:))) * yLims(2)/10) + (0.8 * yLims(2));
-
 figure
-% networkActivity(2:end,:) = a(2:end, :);
 plot(1000:runTime, networkActivity(:,1000:end)', 'linewidth', 2)
 ylim = yLims;
 legend(neuronLabels, 'location', 'west')

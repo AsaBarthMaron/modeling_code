@@ -1,4 +1,4 @@
-classdef Neuron < handle
+classdef Neuron_old < handle
     %UNTITLED3 Summary of this class goes here
     %   Detailed explanation goes here
     
@@ -72,8 +72,6 @@ classdef Neuron < handle
 %             end
             if inhibition > 0 
                 n.Rel(timeStep) = n.Rel(timeStep) ./ inhibition;
-            else
-%                 n.FR(timeStep) = n.FR(timeStep);
             end
         end
         
