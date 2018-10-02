@@ -124,19 +124,25 @@ end
 % end
 networkActivity = inputActivity;
 %%
-networkActivity(2,:) = networkFR(2,:);
-yLims(2) = max(max(networkActivity(3:end, 1000:end)));
+networkActivity(2:3,:) = networkFR(2:3,:);
+yLims(2) = max(max(networkActivity(2:end, 1000:end)));
 yLims(2) = yLims(2) * 1.5;
 yLims(1) = 0;
 a(1, :) = networkActivity(1,:);
-networkActivity(1,:) = ((networkActivity(1,:) / max(networkActivity(1,:))) * yLims(2)/10) + (0.8 * yLims(2));
-networkActivity(2,:) = ((networkActivity(2,:) / max(networkActivity(2,:))) * yLims(2)/10) + (0.8 * yLims(2));
+% networkActivity(1,:) = ((networkActivity(1,:) / max(networkActivity(1,:))) * yLims(2)/10) + (0.8 * yLims(2));
+% networkActivity(2,:) = ((networkActivity(2,:) / max(networkActivity(2,:))) * yLims(2)/10) + (0.8 * yLims(2));
 
 figure
+subplot(5,1,1)
+plot(1000:runTime, networkActivity(1,1000:end)', 'linewidth', 2);
+legend(neuronLabels(1), 'location', 'west')
+set(gca, 'box', 'off', 'fontsize', 20)
+
+subplot(5,1,2:5)
 % networkActivity(2:end,:) = a(2:end, :);
-plot(1000:runTime, networkActivity(:,1000:end)', 'linewidth', 2)
+plot(1000:runTime, networkActivity(2:end,1000:end)', 'linewidth', 2)
 ylim = yLims;
-legend(neuronLabels, 'location', 'west')
+legend(neuronLabels(2:end), 'location', 'west')
 set(gca, 'box', 'off', 'fontsize', 20, 'ylim', yLims)
 % axis([0 1000 0 10])
 set(gcf, 'position', [0 0 1920 1200])
