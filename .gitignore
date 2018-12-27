@@ -2,3 +2,5 @@
 *.png
 untitled*
 Untitled*
+*~
+.DS_Store

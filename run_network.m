@@ -1,4 +1,4 @@
-function networkActivity = run_network(adjMat, neuronLabels, inhbCon, divCon, depCon, facCon, taus, kernType, stimulus)
+function networkActivity = run_network(adjMat, neuronLabels, isDep, isDiv, isFac, taus, kernType, stimulus, iActivityInj)
 % RUN_NETWORK creates a network and runs it for a single trial condition
 
 % Input parameters -
@@ -68,44 +68,45 @@ for iN = 1:length(nn)
     nn(iN).FR = ones(nn(iN).NSteps, 1);
     nn(iN).Rel = ones(nn(iN).NSteps, 1);
     nn(iN).SynRes = ones(nn(iN).NSteps, 1); % Value between 0 and 1
-    nn(iN).IntegratedFR = zeros(nn(iN).NSteps, 1);
 end
 
 % Set synaptic properties for specific connections. Logical matrices for
 % all connections. Why am I doing this and not just passing in logical
 % matrices for each thing? 
-isInhb = false(nNeurons, nNeurons); % Currently this info is already present in adjMat, so it is not being used.
-isDiv = false(nNeurons, nNeurons);
-isDep = false(nNeurons, nNeurons);
-isFac = false(nNeurons, nNeurons);
+% isDiv = false(nNeurons, nNeurons);
+% isDep = false(nNeurons, nNeurons);
+% isFac = false(nNeurons, nNeurons);
 
-% Some fancy indexing to use ordered pairs to assign corresponding values
-% in logical matrices to 1
-isInhb(sub2ind(size(isInhb), inhbCon(:,1), inhbCon(:,2))) = 1;
-isDiv(sub2ind(size(isDiv), divCon(:,1), divCon(:,2))) = 1;
-isDep(sub2ind(size(isDep), depCon(:,1), depCon(:,2))) = 1;
-
-% Doesn't yet work, or do anything
-% isFac(sub2ind(size(isFac), facCon(:,1), facCon(:,2))) = 1;
-
-% isInhb = logical(inhbCon);
-% isDiv = logical(divCon);
-% isDep = logical(depCon);
-% isFac = logical(facCon);
+% Create a noise matrix
+rng(1)
+cn = dsp.ColoredNoise('Color','white','NumChannels', nNeurons, 'SamplesPerFrame',runTime);
+noise = cn()' * 0.35;
 
 % Matrix for holding network activity values
 inputActivity = ones(length(nn), runTime);
 inputActivity(1, :) = stimulus;
+% inputActivity(1,:) = inputActivity(1,:) + noise(1,:);
+
 networkFR = inputActivity;
 networkRelease = inputActivity;
 networkActivity = inputActivity;
+
+
+
 %% Run the trial. All values are calculated one step at a time using the
 % forward euler method.
+timing = zeros(runTime, 1);
+startTic = tic;
+tTic = zeros(nNeurons, runTime);
 for timeStep = (kernLen + 1):runTime
     for iN = 2:length(nn)
         iDep = isDep(:,iN);
         inputActivity(iDep, timeStep-1) = networkRelease(iDep, timeStep-1);
         inputActivity(~iDep, timeStep-1) = networkFR(~iDep, timeStep-1);
+        
+        % Add noise to all input activity for this timestep
+%         inputActivity(:, timeStep-1) = inputActivity(:, timeStep-1) + noise(:, timeStep-1);
+%         inputActivity(iActivityInj, timeStep-1) = inputActivity(iActivityInj, timeStep-1) + 100;
         
         nn(iN).calcResponses(inputActivity, timeStep, ~isDiv(:, iN));
         nn(iN).rectify(timeStep);
@@ -117,33 +118,18 @@ for timeStep = (kernLen + 1):runTime
         nn(iN).Rel(timeStep) = nn(iN).Rel(timeStep) * nn(iN).SynRes(timeStep);
         networkFR(iN, timeStep) = nn(iN).FR(timeStep); 
         networkRelease(iN, timeStep) = nn(iN).Rel(timeStep); 
+        tTic(iN, timeStep) = toc(startTic);
+
     end
+%     if timeStep == 1200
+%         pause
+%     end
+%     timing(timeStep) = toc(startTic);
 end
+toc(startTic)
 % for iN = 2:length(nn)
 %     networkActivity(iN, :) = nn(iN).FR;
 % end
 networkActivity = inputActivity;
 %%
 networkActivity(2:3,:) = networkFR(2:3,:);
-yLims(2) = max(max(networkActivity(2:end, 1000:end)));
-yLims(2) = yLims(2) * 1.5;
-yLims(1) = 0;
-a(1, :) = networkActivity(1,:);
-% networkActivity(1,:) = ((networkActivity(1,:) / max(networkActivity(1,:))) * yLims(2)/10) + (0.8 * yLims(2));
-% networkActivity(2,:) = ((networkActivity(2,:) / max(networkActivity(2,:))) * yLims(2)/10) + (0.8 * yLims(2));
-
-figure
-subplot(5,1,1)
-plot(1000:runTime, networkActivity(1,1000:end)', 'linewidth', 2);
-legend(neuronLabels(1), 'location', 'west')
-set(gca, 'box', 'off', 'fontsize', 20)
-
-subplot(5,1,2:5)
-% networkActivity(2:end,:) = a(2:end, :);
-plot(1000:runTime, networkActivity(2:end,1000:end)', 'linewidth', 2)
-ylim = yLims;
-legend(neuronLabels(2:end), 'location', 'west')
-set(gca, 'box', 'off', 'fontsize', 20, 'ylim', yLims)
-% axis([0 1000 0 10])
-set(gcf, 'position', [0 0 1920 1200])
-% set(gcf, 'position', [0 0 960 600])
