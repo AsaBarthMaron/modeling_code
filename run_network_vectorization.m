@@ -32,7 +32,7 @@ timing = zeros(runTime, 1);
 startTic = tic;
 tTic = zeros(nNeurons, runTime);
 for timeStep = (kernLen + 1):runTime
-    iDep = isDep(:,iN);
+    iDep = isDep(:,2);
     inputActivity(iDep, timeStep-1) = networkRelease(iDep, timeStep-1);
     inputActivity(~iDep, timeStep-1) = networkFR(~iDep, timeStep-1);
     

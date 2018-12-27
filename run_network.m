@@ -99,27 +99,26 @@ timing = zeros(runTime, 1);
 startTic = tic;
 tTic = zeros(nNeurons, runTime);
 for timeStep = (kernLen + 1):runTime
+    iDep = isDep(:,2);
+    inputActivity(iDep, timeStep-1) = networkRelease(iDep, timeStep-1);
+    inputActivity(~iDep, timeStep-1) = networkFR(~iDep, timeStep-1);
+    
+    % Add noise to all input activity for this timestep
+%     inputActivity(:, timeStep-1) = inputActivity(:, timeStep-1) + noise(:, timeStep-1);
+%     inputActivity(iActivityInj, timeStep-1) = inputActivity(iActivityInj, timeStep-1) + 100;
+    
     for iN = 2:length(nn)
-        iDep = isDep(:,iN);
-        inputActivity(iDep, timeStep-1) = networkRelease(iDep, timeStep-1);
-        inputActivity(~iDep, timeStep-1) = networkFR(~iDep, timeStep-1);
-        
-        % Add noise to all input activity for this timestep
-%         inputActivity(:, timeStep-1) = inputActivity(:, timeStep-1) + noise(:, timeStep-1);
-%         inputActivity(iActivityInj, timeStep-1) = inputActivity(iActivityInj, timeStep-1) + 100;
-        
         nn(iN).calcResponses(inputActivity, timeStep, ~isDiv(:, iN));
         nn(iN).rectify(timeStep);
+        networkFR(iN, timeStep) = nn(iN).FR(timeStep); 
+    end
+    for iN = 2:3
         nn(iN).Rel(timeStep) = nn(iN).FR(timeStep);
-        
         nn(iN).divInhibition(inputActivity, timeStep, isDiv(:, iN));
         nn(iN).calcResources(timeStep);
-        
         nn(iN).Rel(timeStep) = nn(iN).Rel(timeStep) * nn(iN).SynRes(timeStep);
-        networkFR(iN, timeStep) = nn(iN).FR(timeStep); 
         networkRelease(iN, timeStep) = nn(iN).Rel(timeStep); 
-        tTic(iN, timeStep) = toc(startTic);
-
+%         tTic(iN, timeStep) = toc(startTic);
     end
 %     if timeStep == 1200
 %         pause
