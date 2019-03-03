@@ -98,11 +98,34 @@ networkActivity = inputActivity;
 timing = zeros(runTime, 1);
 startTic = tic;
 tTic = zeros(nNeurons, runTime);
+
+loadInitialCond = 0;
+if loadInitialCond
+    iC = load('/Users/asa/Modeling/2018-12-27_modeling/model4_initial_conditions.mat');
+    networkFR(:, 1:kernLen) =  iC.networkFR(:,(end-kernLen+1):end);
+    networkRelease(:, 1:kernLen) =  iC.networkRelease(:,(end-kernLen+1):end);
+    inputActivity(:, 1:kernLen) =  iC.inputActivity(:,(end-kernLen+1):end);
+
+    for iN = 1:nNeurons
+        nn(iN).FR = networkFR(iN,:);
+    end
+    for iN = 2:3 % Manually set right now to ORN indices, needs to change if ORN population changes
+        nn(iN).Rel = networkRelease(iN,:);
+        nn(iN).SynRes(1:kernLen) = iC.synRes(iN-1,(end-kernLen+1):end); % Also assumes certain ORN indices are hard coded
+    end
+end
+    
 for timeStep = (kernLen + 1):runTime
+    
+
+    
     iDep = isDep(:,2);
     inputActivity(iDep, timeStep-1) = networkRelease(iDep, timeStep-1);
     inputActivity(~iDep, timeStep-1) = networkFR(~iDep, timeStep-1);
-    
+   
+    if timeStep == 2001
+        x = 1;
+    end
     % Add noise to all input activity for this timestep
 %     inputActivity(:, timeStep-1) = inputActivity(:, timeStep-1) + noise(:, timeStep-1);
 %     inputActivity(iActivityInj, timeStep-1) = inputActivity(iActivityInj, timeStep-1) + 100;
@@ -120,9 +143,7 @@ for timeStep = (kernLen + 1):runTime
         networkRelease(iN, timeStep) = nn(iN).Rel(timeStep); 
 %         tTic(iN, timeStep) = toc(startTic);
     end
-%     if timeStep == 1200
-%         pause
-%     end
+
 %     timing(timeStep) = toc(startTic);
 end
 toc(startTic)
@@ -131,4 +152,4 @@ toc(startTic)
 % end
 networkActivity = inputActivity;
 %%
-networkActivity(2:3,:) = networkFR(2:3,:);
+% networkActivity(2:3,:) = networkFR(2:3,:);

@@ -34,8 +34,8 @@ adjMat(2:end, 2:end) = adjMat(2:end, 2:end) ./ sum(abs(adjMat(2:end,2:end)), 1);
 % adjMat(typeInds.ln, typeInds.orn) = adjMat(typeInds.ln, typeInds.orn) * LNtoORNScalar;
 % 
 % % adjMat(typeInds.ln, :) = adjMat(typeInds.ln, :) * 0.6;
-% % adjMat(typeInds.orn, typeInds.orn) = 0;
-% % adjMat(typeInds.pn, typeInds.orn) = 0;
+% adjMat(typeInds.orn, typeInds.orn) = 0;
+% adjMat(typeInds.pn, typeInds.orn) = 0;
 % 
 % adjMat(typeInds.pn, typeInds.pn) = 0;
 % adjMat([typeInds.orn, typeInds.pn], typeInds.orn) = 0;
@@ -72,12 +72,13 @@ networkActivity = run_network(adjMat, neuronLabels, isDep, isDiv, isFac, taus, k
 
 
 %%
+xStart = 1000;
 networkActivity(:, end) = networkActivity(:, end-1);
 runTime = length(stimulus);
-yLims(2) = max(max(networkActivity(4:end, 1000:end)));
+yLims(2) = max(max(networkActivity(4:end, xStart:end)));
 yLims(2) = yLims(2) * 1.05;
 yLims(1) = 0;
-xLims = [1000 runTime];
+xLims = [xStart runTime];
 a(1, :) = networkActivity(1,:);
 % networkActivity(1,:) = ((networkActivity(1,:) / max(networkActivity(1,:))) * yLims(2)/10) + (0.8 * yLims(2));
 % networkActivity(2,:) = ((networkActivity(2,:) / max(networkActivity(2,:))) * yLims(2)/10) + (0.8 * yLims(2));
@@ -85,7 +86,7 @@ a(1, :) = networkActivity(1,:);
 
 figure
 subplot(5,1,1)
-plot(1000:runTime, networkActivity(1,1000:end)', 'linewidth', 2);
+plot(xStart:runTime, networkActivity(1,xStart:end)', 'linewidth', 2);
 legend(neuronLabels(1), 'location', 'west')
 set(gca, 'box', 'off', 'fontsize', 26)
 xlim(xLims)
@@ -93,12 +94,12 @@ xlim(xLims)
 subplot(5,1,2:5)
 thisPlotInds = {typeInds.pn, iLNs(typeInds.y), iLNs(typeInds.ts), iLNs(typeInds.d), typeInds.rem};
 % networkActivity(2:end,:) = a(2:end, :);
-plot(1000:runTime, networkActivity(thisPlotInds{5},1000:end)', 'linewidth', 2, 'color', [0.9, 0.9, 0.9])
+plot(xStart:runTime, networkActivity(thisPlotInds{5},xStart:end)', 'linewidth', 2, 'color', [0.9, 0.9, 0.9])
 hold on
-plot(1000:runTime, networkActivity(thisPlotInds{4},1000:end)', 'linewidth', 2, 'color', [0.0, 0.75, 0.75])
-plot(1000:runTime, networkActivity(thisPlotInds{2},1000:end)', 'linewidth', 2, 'color', [0.925, 0.69, 0.122])
-plot(1000:runTime, networkActivity(thisPlotInds{3},1000:end)', 'linewidth', 2, 'color', [0.49, 0.18, 0.553])
-plot(1000:runTime, networkActivity(thisPlotInds{1},1000:end)', 'linewidth', 4, 'color', [0.3, 0.5, 0.35])
+plot(xStart:runTime, networkActivity(thisPlotInds{4},xStart:end)', 'linewidth', 2, 'color', [0.0, 0.75, 0.75])
+plot(xStart:runTime, networkActivity(thisPlotInds{2},xStart:end)', 'linewidth', 2, 'color', [0.925, 0.69, 0.122])
+plot(xStart:runTime, networkActivity(thisPlotInds{3},xStart:end)', 'linewidth', 2, 'color', [0.49, 0.18, 0.553])
+plot(xStart:runTime, networkActivity(thisPlotInds{1},xStart:end)', 'linewidth', 4, 'color', [0.3, 0.5, 0.35])
 thisPlotLabels = [neuronLabels(thisPlotInds{5}), neuronLabels(thisPlotInds{4}), neuronLabels(thisPlotInds{2}), neuronLabels(thisPlotInds{3}), neuronLabels(thisPlotInds{1})];
 legend(thisPlotLabels, 'location', 'west', 'NumColumns', 3)
 % legend(neuronLabels(2:end), 'location', 'west', 'NumColumns', 3)
@@ -110,17 +111,17 @@ ylim(yLims);
 % subplot(5,1,4:5)
 % pnInput = networkActivity .* adjMat(:,iLNs(33));
 % % networkActivity(2:end,:) = a(2:end, :);
-% plot(1000:runTime, pnInput(thisPlotInds{5},1000:end)', 'linewidth', 2, 'color', [0.9, 0.9, 0.9])
+% plot(xStart:runTime, pnInput(thisPlotInds{5},xStart:end)', 'linewidth', 2, 'color', [0.9, 0.9, 0.9])
 % hold on
-% plot(1000:runTime, pnInput(thisPlotInds{4},1000:end)', 'linewidth', 2, 'color', [0.0, 0.75, 0.75])
-% plot(1000:runTime, pnInput(thisPlotInds{2},1000:end)', 'linewidth', 2, 'color', [0.925, 0.69, 0.122])
-% plot(1000:runTime, pnInput(thisPlotInds{3},1000:end)', 'linewidth', 2, 'color', [0.49, 0.18, 0.553])
-% plot(1000:runTime, pnInput(thisPlotInds{1},1000:end)', 'linewidth', 4, 'color', [0.3, 0.5, 0.35])
+% plot(xStart:runTime, pnInput(thisPlotInds{4},xStart:end)', 'linewidth', 2, 'color', [0.0, 0.75, 0.75])
+% plot(xStart:runTime, pnInput(thisPlotInds{2},xStart:end)', 'linewidth', 2, 'color', [0.925, 0.69, 0.122])
+% plot(xStart:runTime, pnInput(thisPlotInds{3},xStart:end)', 'linewidth', 2, 'color', [0.49, 0.18, 0.553])
+% plot(xStart:runTime, pnInput(thisPlotInds{1},xStart:end)', 'linewidth', 4, 'color', [0.3, 0.5, 0.35])
 % thisPlotLabels = [neuronLabels(thisPlotInds{5}), neuronLabels(thisPlotInds{4}), neuronLabels(thisPlotInds{2}), neuronLabels(thisPlotInds{3}), neuronLabels(thisPlotInds{1})];
 % % legend(thisPlotLabels, 'location', 'west', 'NumColumns', 3)
 % % legend(neuronLabels(2:end), 'location', 'west', 'NumColumns', 3)
 % set(gca, 'box', 'off', 'fontsize', 26, 'ylim', yLims)
 % xlim(xLims)
 % set(gcf, 'position', [0 0 1920 1200])
-% ylim([min(min(pnInput(4:end, 1000:end))) max(max(pnInput(4:end, 1000:end)))]);
+% ylim([min(min(pnInput(4:end, xStart:end))) max(max(pnInput(4:end, xStart:end)))]);
 % 
