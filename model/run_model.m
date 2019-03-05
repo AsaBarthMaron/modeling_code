@@ -1,5 +1,5 @@
 load('/Users/asa/2018-12-14_full_LN_adj_mat/2018-12-15_input_vars.mat')
-cd /Users/asa/Modeling/modeling_code
+cd /Users/asa/Modeling/modeling_code/model
 
 remLNs = iLNs;
 remLNs([typeInds.y; typeInds.ts; typeInds.d]) = [];

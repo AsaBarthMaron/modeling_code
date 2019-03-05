@@ -1,4 +1,4 @@
-classdef Stim
+classdef Stim < handle
     % Class to define stimuli to run the model on
     properties
         Stimulus
