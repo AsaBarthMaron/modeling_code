@@ -16,3 +16,13 @@ parfor iM = 1:nMs
     m(iM).runExp;
     m(iM).plotResults;
 end
+
+%% Run step experiment
+intensity = 1;
+
+nMs = 1;
+m = Model();
+m.init();
+m.setIntensity(intensity);
+m.runExp;
+m.plotResults

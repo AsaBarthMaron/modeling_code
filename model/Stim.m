@@ -2,27 +2,40 @@ classdef Stim < handle
     % Class to define stimuli to run the model on
     properties
         Stimulus
+        Baseline
     end
     
     methods
         function s = Stim()
-            stimIncrement = 1.5;
-            baseline = ones(2000, 1)*10;
-            StimulusOnset = length(baseline);
-            stimulus = baseline;
-
-            stimLvls = stimIncrement * (2.^[1:8]);
-            stimLvls = stimLvls + max(baseline);
-
-            for i = 1:8
-                stimSegment = zeros(100, 1) + stimLvls(i);
-                stimulus = [stimulus;stimSegment];
-            end
-            stimulus = stimulus + 10;
-            s.Stimulus = stimulus;
-
+            s.stepStim(8, 100);
+            s.setIntensity(384);
+            s.setBaseline(2e3, 20);
+            s.addBaseline;
         end
         
+        function s = setBaseline(s, len, intensity)
+            s.Baseline = ones(len, 1) * intensity;
+        end
+        
+        function s = addBaseline(s)
+            % Intensity should be set (setIntensity) before
+            % adding baseline. Otherwise setIntensity will 
+            % scale the baseline as well.
+            
+            s.Stimulus = [s.Baseline; s.Stimulus + max(s.Baseline)];
+        end
+        
+        function s = stepStim(s, nSteps, stepLen)
+            % Note, values using this generator fn will be
+            % much larger amplitude than the rest (
+            s.Stimulus = [];
+            stimLvls = 1.5 * (2.^[1:nSteps]);
+            for iLvl = 1:nSteps
+                stimStep = ones(stepLen, 1) * stimLvls(iLvl);
+                s.Stimulus = [s.Stimulus; stimStep];
+            end
+           s.Stimulus = s.Stimulus / max(s.Stimulus);
+        end
                 
 %         function s = initializeNetwork TODO
 %         end
@@ -40,6 +53,16 @@ classdef Stim < handle
             
             s.Stimulus = stim(:,iStim) * 1;
         end
+        
+        function s = setIntensity(s, intensity)
+            s.Stimulus = s.Stimulus .* intensity;
+        end
+        
+        function s = squarePulse(s, len)
+            s.Stimulus = [];
+            s.Stimulus = [ones(len, 1); zeros(0.5 * len, 1)];
+        end
+            
     end
 end
 
