@@ -1,4 +1,4 @@
-function networkActivity = run_network(adjMat, neuronLabels, isDep, isDiv, isFac, taus, kernType, stimulus, iActivityInj)
+function [networkActivity, nn] = run_network(adjMat, neuronLabels, isDep, isDiv, isFac, taus, kernType, stimulus, iActivityInj)
 % RUN_NETWORK creates a network and runs it for a single trial condition
 
 % Input parameters -

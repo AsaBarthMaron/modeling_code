@@ -11,6 +11,7 @@ classdef Model < Stim & handle
         Names
         NeuronLabels
         NetworkActivity
+        nn
         RunTime
         SortedLNcats
         Taus
@@ -35,7 +36,7 @@ classdef Model < Stim & handle
             m.KernType = inputVars.kernType;
             m.Names = inputVars.names;
             m.NeuronLabels = inputVars.neuronLabels;
-            m.RunTime = size(m.Stimulus,1);
+            m.RunTime = size(m.Stimulus,1); % 1st stimulus dimension is always time and sets the model run time
             m.SortedLNcats = inputVars.sortedLNcats;
             m.Taus = inputVars.taus;
             m.TypeInds = inputVars.typeInds;
@@ -46,8 +47,10 @@ classdef Model < Stim & handle
             m.normalizeInputContacts()
             scalingMatrix = ones(nNs, nNs) * 10;
             m.scaleCons(scalingMatrix);
-            m.runExp();
-            m.plotResults()
+%             m.runExp();
+%             m.varStim();
+%             m.runVarStim();
+%             m.plotResults()
         end
         
         function m = initializeModel(m)
@@ -62,9 +65,16 @@ classdef Model < Stim & handle
         end
         
         function m = runExp(m)
-            m.NetworkActivity = run_network(m.AdjMat, m.NeuronLabels, m.IsDep, m.IsDiv, m.IsFac, m.Taus, m.KernType, m.Stimulus, m.ILNs(m.TypeInds.y));
+            [m.NetworkActivity, m.nn] = run_network(m.AdjMat, m.NeuronLabels, m.IsDep, m.IsDiv, m.IsFac, m.Taus, m.KernType, m.Stimulus, m.ILNs(m.TypeInds.y));
         end
         
+        function m = runVarStim(m)
+            for stimFreq = 1:size(m.Stimulus,2)
+                [NetworkActivity, ~] = run_network(m.AdjMat, m.NeuronLabels, m.IsDep, m.IsDiv, m.IsFac, m.Taus, m.KernType, m.Stimulus(:,stimFreq), m.ILNs(m.TypeInds.y));
+                m.NetworkActivity(:,:,stimFreq) = squeeze(NetworkActivity);
+            end
+        end
+            
         function m = scaleCons(m, scalingMatrix)
             m.AdjMat(2:end, 2:end) = m.AdjMat(2:end, 2:end) .* scalingMatrix;
         end
@@ -108,6 +118,8 @@ classdef Model < Stim & handle
             xlim(xLims)
             set(gcf, 'position', [0 0 1920 1200])
             ylim(yLims);
+            
+%             linkaxes('x')
         end
     end
     
