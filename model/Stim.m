@@ -41,7 +41,7 @@ classdef Stim < handle
                 case 'steps'
                     s.stepStim();
                 case 'square'
-                    s.squarePulse();
+                    s.squarePulse(1e3);
             end
         end
         
