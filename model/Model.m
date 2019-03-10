@@ -53,6 +53,12 @@ classdef Model < Stim & handle
 %             m.plotResults()
         end
         
+%         function m = runModel(m, 
+                    
+        function m = scaleCons(m, scalingMatrix)
+            m.AdjMat(2:end, 2:end) = m.AdjMat(2:end, 2:end) .* scalingMatrix;
+        end
+        
         function m = initializeModel(m)
             % Run model to steady state
             % Store this model instance, or relevant parameter values so
@@ -74,9 +80,11 @@ classdef Model < Stim & handle
                 m.NetworkActivity(:,:,stimFreq) = squeeze(NetworkActivity);
             end
         end
-            
-        function m = scaleCons(m, scalingMatrix)
-            m.AdjMat(2:end, 2:end) = m.AdjMat(2:end, 2:end) .* scalingMatrix;
+        
+        function m = saveResults(m, argString, saveDir)
+            d = datetime('now', 'format', 'yyyy-MM-dd');
+            fname = [char(d) '_' argString '.mat'];
+            save(fullfile(saveDir, fname), 'm');
         end
                 
         function plotResults(m)

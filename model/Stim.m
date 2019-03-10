@@ -1,8 +1,10 @@
 classdef Stim < handle
     % Class to define stimuli to run the model on
     properties
-        Stimulus
         Baseline
+        Intensity
+        Stimulus
+        StimWav
     end
     
     methods
@@ -23,6 +25,24 @@ classdef Stim < handle
             % scale the baseline as well.
             
             s.Stimulus = [s.Baseline; s.Stimulus + max(s.Baseline)];
+        end
+        
+        function s = setStimulus(s, stimWav)
+            % Takes input string stimWav and selects appropriate stimulus
+            % waveform based on results.
+            
+            switch stimWav
+                case 'fast'
+                    s.varStim(1);
+                case 'med'
+                    s.varStim(2);
+                case 'slow'
+                    s.varStim(3);
+                case 'steps'
+                    s.stepStim();
+                case 'square'
+                    s.squarePulse();
+            end
         end
         
         function s = stepStim(s, nSteps, stepLen)
@@ -52,6 +72,8 @@ classdef Stim < handle
             stim(:,3) = [zeros(2 * sampRate, 1);   repmat(imp{3}, 2, 1); zeros(ceil(1.84 * sampRate), 1)];
             
             s.Stimulus = stim(:,iStim) * 1;
+            stimWav = {'fast', 'med', 'slow'};
+            s.StimWav = stimWav{iStim};
         end
         
         function s = setIntensity(s, intensity)
