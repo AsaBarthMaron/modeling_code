@@ -25,7 +25,7 @@ m.setStimulus(stimWav);
 m.setIntensity(intensity);
 m.addBaseline();
 m.runExp();
-m.saveResults(saveDir);
+m.saveResults(argString, saveDir);
 
 end
 

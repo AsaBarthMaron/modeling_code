@@ -7,4 +7,4 @@
 #SBATCH --mail-type=END
 
 module load matlab/2018a
-matlab -nodisplay -r "cd ~/Modeling/modeling_code/model; run_model_O2($1, $2, $3)"
+matlab -nodisplay -r "cd /home/anb12/Modeling/modeling_code/model; run_model_O2($1, $2, $3)"
