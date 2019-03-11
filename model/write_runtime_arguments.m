@@ -15,12 +15,12 @@ intensities = [intensityRange(1):intensityStepSize:intensityRange(2)];
 
 stimWaveforms = {'fast', 'med', 'slow', 'steps', 'square'};
 
-fname = '2019-03-08_first_run.txt';
+fname = '2019-03-11_steps_debugging.txt';
 fid = fopen(fname, 'w');
 
-for stim = stimWaveforms
-    for int = intensities
-        fprintf(fid, '%10s, %6.2f\n', stim{1}, int)
+for stim = 1 %stimWaveforms
+    for int = 384 %intensities
+        fprintf(fid, '%10s, %6.2f\n', 'steps', int)
     end
 end
 fprintf(fid, ',');
