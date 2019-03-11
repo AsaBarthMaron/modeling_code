@@ -89,7 +89,7 @@ classdef Model < Stim & handle
                 
         function plotResults(m)
             xStart = 1000;
-            runTime = m.RunTime;
+            runTime = size(m.Stimulus, 1);
             networkActivity = m.NetworkActivity;
             networkActivity(:, end) = networkActivity(:, end-1);
             neuronLabels = m.NeuronLabels;
