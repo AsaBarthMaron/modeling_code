@@ -4,7 +4,8 @@
 % This works for linearly spaced variables, but should also extend to
 % log scale.
 
-cd '~/Modeling/modeling_code/model'
+fname = '2019-03-11_steps_debugging.txt';
+saveDir = '~/Modeling/modeling_results/runtime_arguments'
 intensityStepSize = 100;
 intensityRange = [0 1e3];
 intensities = [intensityRange(1):intensityStepSize:intensityRange(2)];
@@ -15,8 +16,7 @@ intensities = [intensityRange(1):intensityStepSize:intensityRange(2)];
 
 stimWaveforms = {'fast', 'med', 'slow', 'steps', 'square'};
 
-fname = '2019-03-11_steps_debugging.txt';
-fid = fopen(fname, 'w');
+fid = fopen(fullfile(saveDir, fname), 'w');
 
 for stim = 1 %stimWaveforms
     for int = 384 %intensities

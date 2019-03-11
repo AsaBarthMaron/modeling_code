@@ -3,10 +3,10 @@
 # Be VERY careful here.
 # Using mkdir with -p will mean that running this script
 # will overwrite existing directory if it already exists.
-saveDir="/home/anb12/Modeling/modeling_results/2019-03-11_steps_debugging"
-# mkdir -p $saveDir
+saveDir="$HOME/Modeling/modeling_results/2019-03-12_steps_debugging"
+mkdir -p $saveDir
 
-file="/home/anb12/Modeling/modeling_code/model/2019-03-11_steps_debugging.txt"
+file="$HOME/Modeling/modeling_results/runtime_arguments/2019-03-11_steps_debugging.txt"
 echo $file
 
 
