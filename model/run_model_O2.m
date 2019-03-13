@@ -1,8 +1,20 @@
-function run_model_O2(stimWav, intensity, saveDir)
+function run_model_O2(stimWav, intensity, ORNtoLNPN, PNtoLNPN, LNtoLNPN, ORNtoORN, LNtoORN, PNtoORN, ORN, LN, PN, lnTau, saveDir)
 
 %   stimWav
 %   intensities
 %   varargin not being used for now
+
+%   For now (3/12/19) add:
+%   ORNtoLNPN
+%   PNtoLNPN
+%   LNtoLNPN
+%   ORNtoORN
+%   LNtoORN
+%   PNtoORN
+%   ORN         % Should not be done in combination with ORNtoLNPN, ORN-ORN
+%   LN          % Should not be done in combination with LNtoLNPN, LN-ORN
+%   PN          % Should not be done in combination with PNtoLNPN, PN-ORN
+%   lnTau
 
 args.stimWav = stimWav;
 args.intensity = intensity;
