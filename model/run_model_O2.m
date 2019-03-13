@@ -1,4 +1,4 @@
-function run_model_O2(stimWav, intensity, ORNtoLNPN, PNtoLNPN, LNtoLNPN, ORNtoORN, LNtoORN, PNtoORN, ORN, LN, PN, lnTau, saveDir)
+function run_model_O2(stimWav, intensity, ORNtoLNPN, PNtoLNPN, LNtoLNPN, ORNtoORN, LNtoORN, PNtoORN, ORN, LN, PN, saveDir)
 
 %   stimWav
 %   intensities
@@ -19,6 +19,22 @@ function run_model_O2(stimWav, intensity, ORNtoLNPN, PNtoLNPN, LNtoLNPN, ORNtoOR
 args.stimWav = stimWav;
 args.intensity = intensity;
 
+scalar = struct;
+scalar.ORNtoLNPN = ORNtoLNPN;
+scalar.PNtoLNPN = PNtoLNPN;
+scalar.LNtoLNPN = LNtoLNPN;
+scalar.ORNtoORN = ORNtoORN;
+scalar.LNtoORN = LNtoORN;
+scalar.PNtoORN = PNtoORN;
+scalar.ORN = ORN;        % Should not be done in combination with ORNtoLNPN, ORN-ORN
+scalar.LN = LN;          % Should not be done in combination with LNtoLNPN, LN-ORN
+scalar.PN = PN;          % Should not be done in combination with LNtoLNPN, LN-ORN
+
+fields = fieldnames(scalar);
+for fn = fields'
+    args.(fn{1}) = scalar.(fn{1});
+end
+
 fields = fieldnames(args);
 argString = [];
 for fn = fields'
@@ -33,6 +49,9 @@ m = Model();
 m.init();   % This works for now only because we're not yet playing with 
             % changes to model parameters. Otherwise the normalization &
             % scaling done in .init() would be problematic.
+            % 3/13/19 - Actually I want to do param tweaking after the
+            % normalization and scaling.
+scale_cons(m, scalar);
 m.setStimulus(stimWav);
 m.setIntensity(intensity);
 m.addBaseline();

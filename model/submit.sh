@@ -8,4 +8,4 @@
 #SBATCH -o "/home/anb12/Modeling/modeling_results/slurm_outfiles/%j.out"
 
 module load matlab/2018a
-matlab -nodisplay -r "cd /home/anb12/Modeling/modeling_code/model; run_model_O2('$1', $2, '$3')"
+matlab -nodisplay -r "cd /home/anb12/Modeling/modeling_code/model; run_model_O2('$1', $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, '$12')"

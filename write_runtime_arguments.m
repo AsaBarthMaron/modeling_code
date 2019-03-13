@@ -21,9 +21,8 @@ stimWaveforms = {'square'};
 % scalarSteps = [scalarStepRange(1):scalarStepSize:scalarStepRange(2)];
 scalarSteps = [0, 1, 10, 100];
 
-fields = fieldnames(scalar);
-
 % Adjust adjacency matrix weights 
+  scalar = struct;
   scalar.ORNtoLNPN = 1;
   scalar.PNtoLNPN = 1;
   scalar.LNtoLNPN = 1;
@@ -32,7 +31,10 @@ fields = fieldnames(scalar);
   scalar.PNtoORN = 1;
   scalar.ORN = 1;         % Should not be done in combination with ORNtoLNPN, ORN-ORN
   scalar.LN = 1;          % Should not be done in combination with LNtoLNPN, LN-ORN
-  scalar.PN = 1;  
+  scalar.PN = 1; 
+  
+  fields = fieldnames(scalar);
+
 %% Write to file
 fid = fopen(fullfile(saveDir, fname), 'w');
 
