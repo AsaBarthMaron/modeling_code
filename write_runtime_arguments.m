@@ -43,7 +43,7 @@ for stim = stimWaveforms
         for fn = fields'
             for s = scalarSteps
                 scalar.(fn{1}) = s;
-                fprintf(fid, '%10s, %6.2f', stim{1}, int)
+                fprintf(fid, '%10s, %6d', stim{1}, int)
 
                 for iField = 1:length(fields)
                     fprintf(fid, ', %5d', scalar.(fields{iField}));
