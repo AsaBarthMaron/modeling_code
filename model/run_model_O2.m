@@ -25,11 +25,11 @@ m.init();   % This works for now only because we're not yet playing with
             % 3/13/19 - Actually I want to do param tweaking after the
             % normalization and scaling.
 scale_cons(m, scalar);
-m.setStimulus(stimWav);
-m.setIntensity(intensity);
+m.setStimulus(param.stimWav);
+m.setIntensity(param.intensity);
 m.addBaseline();
 m.runExp();
-m.saveResults(argString, saveDir);
+m.saveResults(fname, saveDir);
 
 end
 
