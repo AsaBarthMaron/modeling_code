@@ -25,12 +25,12 @@ d = datetime('now', 'format', 'yyyy-MM-dd');
 d = char(d);
 
 for iStim = 1:length(stimWaveforms)
-    for iInt = 1:2%length(intensities)
-        for sORN = 1:2%nScalarSteps
-            for sPN = 1:2%nScalarSteps
-                for sLN = 1%:nScalarSteps
-                    for sLNtoORN = 1%:nScalarSteps
-                        for sLNtoLNPN = 1%:nScalarSteps
+    for iInt = 1:length(intensities)
+        for sORN = 1:nScalarSteps
+            for sPN = 1:nScalarSteps
+                for sLN = 1:nScalarSteps
+                    for sLNtoORN = 1:nScalarSteps
+                        for sLNtoLNPN = 1:nScalarSteps
                             p.stimWav = stimWaveforms{iStim};
                             p.intensity = intensities(iInt);
                             p.ORN = scalarSteps(sORN);
@@ -86,7 +86,7 @@ nModels = length(param);
 
 % Set number of runs per job, check to make sure # jobs doesn't exceed set
 % number.
-nRunsPerJob = 4;
+nRunsPerJob = 100;
 nJobs = ceil(nModels / nRunsPerJob);
 if nJobs > 300
     error('Number of jobs to be requested exceeds 300.')
