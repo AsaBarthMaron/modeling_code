@@ -2,7 +2,7 @@
 
 clear
 addpath(genpath('~/Modeling/modeling_code/'));
-saveDir="~/Modeling/modeling_results/2019-03-19"
+saveDir="~/Modeling/modeling_results/2019-03-19_parameter_comb_batch"
 if ~isdir(saveDir)
     mkdir(saveDir)
 end
@@ -107,7 +107,7 @@ end
 
 %% Set job (not run) parameters
 memGB = 2;
-timeLimitMin = 130 * nRunsPerJob; % Assuming a max of three minutes per model run
+timeLimitMin = 4 * nRunsPerJob; % Assuming a max of four minutes per model run
 queueName = 'short';
 %% Submit job batches
 configCluster

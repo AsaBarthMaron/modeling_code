@@ -28,7 +28,12 @@ scale_cons(m, scalar);
 m.setStimulus(param.stimWav);
 m.setIntensity(param.intensity);
 m.addBaseline();
+m.smoothStim(30);
 m.runExp();
+
+m.Fname = fname;
+m.Param = param;
+m.SaveDir = saveDir;
 m.saveResults(fname, saveDir);
 
 end

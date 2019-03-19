@@ -3,6 +3,7 @@ classdef Model < Stim & handle
     properties
         AbmNames
         AdjMat
+        Fname
         ILNs
         IsDep
         IsDiv
@@ -12,7 +13,9 @@ classdef Model < Stim & handle
         NeuronLabels
         NetworkActivity
         nn
+        Param
         RunTime
+        SaveDir
         SortedLNcats
         Taus
         TypeInds

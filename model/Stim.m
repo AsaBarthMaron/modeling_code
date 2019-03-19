@@ -45,6 +45,18 @@ classdef Stim < handle
             end
         end
         
+        function s = smoothStim(s, tau)
+            kernLen = 800;
+            tauKrn = exp(-(1:kernLen)/tau);
+            tauKrn = tauKrn ./ sum(tauKrn);
+            phaseShift = kernLen / 2;   % Appears to be correct empirically, but I can't tell you why.
+            
+            filtStim = conv(s.Stimulus, tauKrn, 'same');
+            filtStim = [NaN(phaseShift,1); filtStim(1:end-phaseShift)];
+            filtStim(1:length(s.Baseline)) = s.Baseline;
+            s.Stimulus = filtStim;
+        end
+        
         function s = stepStim(s, nSteps, stepLen)
             % Note, values using this generator fn will be
             % much larger amplitude than the rest (
@@ -82,7 +94,7 @@ classdef Stim < handle
         
         function s = squarePulse(s, len)
             s.Stimulus = [];
-            s.Stimulus = [ones(len, 1); zeros(0.5 * len, 1)];
+            s.Stimulus = [ones(len, 1); zeros(1 * len, 1)];
         end
             
     end
