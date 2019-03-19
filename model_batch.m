@@ -31,13 +31,14 @@ for iStim = 1:length(stimWaveforms)
                 for sLN = 1%:nScalarSteps
                     for sLNtoORN = 1%:nScalarSteps
                         for sLNtoLNPN = 1%:nScalarSteps
-                            p.stimWav = stimWaveforms(iStim);
+                            p.stimWav = stimWaveforms{iStim};
                             p.intensity = intensities(iInt);
                             p.ORN = scalarSteps(sORN);
                             p.PN = scalarSteps(sPN);
                             p.LN = scalarSteps(sLN);
                             p.LNtoORN = scalarSteps(sLNtoORN);
                             p.LNtoLNPN = scalarSteps(sLNtoLNPN);
+                            p.fname = [];
                             
 %                             param(iStim, iInt, sORN, sPN, sLN, sLNtoORN, sLNtoLNPN)...
 %                                 .stimWaveform = stimWaveforms(iStim);
@@ -57,6 +58,7 @@ for iStim = 1:length(stimWaveforms)
                             % Set save filename
                             fname = d;
                             fields = fieldnames(p);
+                            fields(find(strcmp(fields, 'fname'))) = [];
                             for fn = fields'
                                 val = p.(fn{1});
                                 if isnumeric(val)
@@ -65,6 +67,7 @@ for iStim = 1:length(stimWaveforms)
                                 fname = strcat(fname, '_', fn{1}, '-', val);
                             end
                             p.fname = fname;
+                            clear fname
                             param(iStim, iInt, sORN, sPN, sLN, sLNtoORN, sLNtoLNPN) = p;
                         end
                     end

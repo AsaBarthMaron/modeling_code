@@ -6,7 +6,7 @@ fname = extractfield(param, 'fname');
 param = rmfield(param, 'fname');
 
 for iRun = 1:nRuns
-    run_model_O2(param(iRun), fname(iRun), saveDir);
+    run_model_O2(param(iRun), fname{iRun}, saveDir);
 end
 disp('Job finished')
 
