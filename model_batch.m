@@ -104,7 +104,7 @@ end
 
 %% Set job (not run) parameters
 memGB = 2;
-timeLimitMin = 3 * nRunsPerJob; % Assuming a max of three minutes per model run
+timeLimitMin = 130 * nRunsPerJob; % Assuming a max of three minutes per model run
 queueName = 'short';
 %% Submit job batches
 % configCluster
