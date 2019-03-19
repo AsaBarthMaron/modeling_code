@@ -83,7 +83,7 @@ nModels = length(param);
 
 % Set number of runs per job, check to make sure # jobs doesn't exceed set
 % number.
-nRunsPerJob = 100;
+nRunsPerJob = 4;
 nJobs = ceil(nModels / nRunsPerJob);
 if nJobs > 300
     error('Number of jobs to be requested exceeds 300.')
@@ -108,6 +108,7 @@ memGB = 2;
 timeLimitMin = 3 * nRunsPerJob; % Assuming a max of three minutes per model run
 queueName = 'short';
 %% Submit job batches
+configCluster
 c = parcluster;
 
 for iJob = 1:nJobs
