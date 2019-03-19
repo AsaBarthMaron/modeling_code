@@ -81,9 +81,9 @@ classdef Model < Stim & handle
             end
         end
         
-        function m = saveResults(m, argString, saveDir)
-            d = datetime('now', 'format', 'yyyy-MM-dd');
-            fname = [char(d) '_' argString '.mat'];
+        function m = saveResults(m, fname, saveDir)
+%             d = datetime('now', 'format', 'yyyy-MM-dd');
+%             fname = [char(d) '_' argString '.mat'];
             save(fullfile(saveDir, fname), 'm');
         end
                 
