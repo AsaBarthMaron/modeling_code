@@ -98,8 +98,7 @@ for iRun = 1:nJobs
         jobBatches{iRun} = iRunStart(iRun):(iRunStart(iRun+1)-1);
     % Since 'last' job will not have a symmetric number of jobs
     elseif iRun == nJobs
-        jobBatches{iRun} = iRunStart(iRun):iRunStart(iRun) + ...
-                           mod(nModels, nRunsPerJob) - 1;
+        jobBatches{iRun} = iRunStart(iRun):nModels;
     end
 end
 
@@ -108,13 +107,13 @@ memGB = 2;
 timeLimitMin = 3 * nRunsPerJob; % Assuming a max of three minutes per model run
 queueName = 'short';
 %% Submit job batches
-configCluster
+% configCluster
 c = parcluster;
 
 for iJob = 1:nJobs
     jobName = [d, '_runs_', num2str(jobBatches{iJob}(1)), '-', num2str(jobBatches{iJob}(end))]
-    c = set_job_params(c, queueName, timeLimitMin, memGB, jobName);
+%     c = set_job_params(c, queueName, timeLimitMin, memGB, jobName);
     inputArgs = {param(jobBatches{iJob}), saveDir};
-    c.batch(@batch_run_model_O2, 0, inputArgs);
+%     c.batch(@batch_run_model_O2, 0, inputArgs);
 end
 

@@ -18,6 +18,7 @@ function c = set_job_params(c, queueName, timeLimit, memGB, jobName)
 
     c.AdditionalProperties.WallTime = num2str(timeLimit);
     c.AdditionalProperties.QueueName = queueName;
+    c.AdditionalProperties.DebugMessagesTurnedOn = 1;
     c.AdditionalProperties.AdditionalSubmitArgs = ['-c 1 --mem=', num2str(memGB), 'G --job-name=', ...
                                                     jobName, ' --requeue'];
     
