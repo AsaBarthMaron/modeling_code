@@ -98,7 +98,7 @@ classdef Neuron < handle
             % evernote note to calculate the synaptic resources
             % First step is to calculate the integral of d*r(t) + (1/Ta)
             % or: DepletionRate * FR + (1/TauRepleneshment)
-            Y = exp(cumtrapz((n.DepletionRate .* n.Rel(1:timeStep)) + (1/n.TauRepleneshment)));
+            Y = exp(cumtrapz((n.DepletionRate .* n.Rel(1:timeStep-1)) + (1/n.TauRepleneshment)));
             Y(Y == Inf) = realmax;
             LHS = (cumtrapz(Y) ./ (Y .* n.TauRepleneshment)) + (1 ./ Y);
             LHS(isnan(LHS)) = 0;

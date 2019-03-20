@@ -139,7 +139,7 @@ for timeStep = (kernLen + 1):runTime
         nn(iN).Rel(timeStep) = nn(iN).FR(timeStep);
         nn(iN).divInhibition(inputActivity, timeStep, isDiv(:, iN));
         nn(iN).calcResources(timeStep);
-        nn(iN).Rel(timeStep) = nn(iN).Rel(timeStep) * nn(iN).SynRes(timeStep);
+        nn(iN).Rel(timeStep) = nn(iN).Rel(timeStep) * nn(iN).SynRes(timeStep-1);
         networkRelease(iN, timeStep) = nn(iN).Rel(timeStep); 
 %         tTic(iN, timeStep) = toc(startTic);
     end
