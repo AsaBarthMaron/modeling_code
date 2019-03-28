@@ -2,7 +2,7 @@
 
 clear
 addpath(genpath('~/Modeling/modeling_code/'));
-saveDir="~/Modeling/modeling_results/2019-03-20_parameter_comb_batch"
+saveDir="~/Modeling/modeling_results/2019-03-28_parameter_comb_sim_syn_dep_PN_ORN_to_ORN_silenced"
 if ~isdir(saveDir)
     mkdir(saveDir)
 end

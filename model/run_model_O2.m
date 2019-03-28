@@ -25,6 +25,8 @@ m.init();   % This works for now only because we're not yet playing with
             % 3/13/19 - Actually I want to do param tweaking after the
             % normalization and scaling.
 scale_cons(m, scalar);
+m.AdjMat(53, 2:3) = 0; % Silence PN-ORN connections
+m.AdjMat(2:3, 2:3) = 0; % Silence OR-ORN connections
 m.setStimulus(param.stimWav);
 m.setIntensity(param.intensity);
 m.addBaseline();
