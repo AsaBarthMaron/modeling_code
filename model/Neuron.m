@@ -93,16 +93,62 @@ classdef Neuron < handle
             end
         end
         
+%         function calcResources(n, timeStep)
+%             % CALCRESOURCES uses methods described in my 2018-01-24
+%             % evernote note to calculate the synaptic resources
+%             % First step is to calculate the integral of d*r(t) + (1/Ta)
+%             % or: DepletionRate * FR + (1/TauRepleneshment)
+%             Y = exp(cumtrapz((n.DepletionRate .* n.Rel(1:timeStep-1))+ (1/n.TauRepleneshment)) );
+%             Y(Y == Inf) = realmax;
+%             LHS = (cumtrapz(Y) ./ (Y .* n.TauRepleneshment)) + (1 ./ Y);
+%             LHS(isnan(LHS)) = 0;
+%             n.SynRes = LHS;
+%         end
+%         function calcResources(n, timeStep)
+%             % CALCRESOURCES uses methods described in my 2018-01-24
+%             % evernote note to calculate the synaptic resources
+%             % First step is to calculate the integral of d*r(t) + (1/Ta)
+%             % or: DepletionRate * FR + (1/TauRepleneshment)
+%             intgrlRt = cumtrapz(n.Rel(1:timeStep-1));
+%             expRep = exp(1/n.TauRepleneshment);
+%             expDRt = exp(n.DepletionRate * intgrlRt);
+%             Y = expRep * expDRt;
+%             numerator = exp(Y) + (
+%             n.SynRes = LHS;
+%         end
+%         function calcResources(n, timeStep)
+%             % CALCRESOURCES uses methods described in my 2018-01-24
+%             % evernote note to calculate the synaptic resources
+%             % First step is to calculate the integral of d*r(t) + (1/Ta)
+%             % or: DepletionRate * FR + (1/TauRepleneshment)
+%             C = 1;
+%             intgrlRt = cumtrapz(n.Rel(1:timeStep-1));
+%             expRep = exp(1 / n.TauRepleneshment);
+%             expDR = exp(n.DepletionRate .* intgrlRt);
+%             Y = expRep * expDR;
+%             numerator = cumtrapz(Y) + (n.TauRepleneshment .* C); 
+%             denom = n.TauRepleneshment .* Y;
+%             At = (numerator ./ denom);
+%             n.SynRes = At;
+%             
+%         end
         function calcResources(n, timeStep)
             % CALCRESOURCES uses methods described in my 2018-01-24
             % evernote note to calculate the synaptic resources
             % First step is to calculate the integral of d*r(t) + (1/Ta)
             % or: DepletionRate * FR + (1/TauRepleneshment)
-            Y = exp(cumtrapz((n.DepletionRate .* n.Rel(1:timeStep-1)) + (1/n.TauRepleneshment)));
-            Y(Y == Inf) = realmax;
-            LHS = (cumtrapz(Y) ./ (Y .* n.TauRepleneshment)) + (1 ./ Y);
-            LHS(isnan(LHS)) = 0;
-            n.SynRes = LHS;
+            At = n.SynRes(timeStep-1);
+            Ta = n.TauRepleneshment;
+            d = n.DepletionRate;
+            Rt = n.Rel(timeStep-1);
+            dAtdt = -d * Rt * At + ((1-At)/Ta);
+            At = At + dAtdt;
+            if At <= 0
+                At = 1/Ta;
+            elseif At > 1
+                At = 1;
+            end
+            n.SynRes(timeStep) = At;
         end
         
         function n = saturate(n, timeStep)

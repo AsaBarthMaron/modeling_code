@@ -123,7 +123,7 @@ for timeStep = (kernLen + 1):runTime
     inputActivity(iDep, timeStep-1) = networkRelease(iDep, timeStep-1);
     inputActivity(~iDep, timeStep-1) = networkFR(~iDep, timeStep-1);
    
-    if timeStep == 2001
+    if timeStep == 522
         x = 1;
     end
     % Add noise to all input activity for this timestep
@@ -139,7 +139,7 @@ for timeStep = (kernLen + 1):runTime
         nn(iN).Rel(timeStep) = nn(iN).FR(timeStep);
         nn(iN).divInhibition(inputActivity, timeStep, isDiv(:, iN));
         nn(iN).calcResources(timeStep);
-        nn(iN).Rel(timeStep) = nn(iN).Rel(timeStep) * nn(iN).SynRes(timeStep-1);
+        nn(iN).Rel(timeStep) = nn(iN).Rel(timeStep) * nn(iN).SynRes(timeStep);
         networkRelease(iN, timeStep) = nn(iN).Rel(timeStep); 
 %         tTic(iN, timeStep) = toc(startTic);
     end
