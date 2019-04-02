@@ -37,8 +37,8 @@ classdef Neuron < handle
             n.FR = zeros(n.NSteps, 1);
             n.Rel = zeros(n.NSteps, 1);
             n.SynRes = ones(n.NSteps, 1);
-%             n.DepletionRate = 0.23 * 1e-3;     % Taken from Kathy's paper, units in terms of fraction per spike
-            n.DepletionRate = 0.0073;     % Taken from Kathy's paper, units in terms of fraction per spike
+            n.DepletionRate = 0.3 * 1e-3;     % Taken from Kathy's paper, units in terms of fraction per spike
+%             n.DepletionRate = 0.0073;     % Taken from Kathy's paper, units in terms of fraction per spike
             n.TauRepleneshment = 1000; % Taken from Kathy's paper, units of ms
             
         end
@@ -66,6 +66,7 @@ classdef Neuron < handle
                              .* n.TauKrn;
             filteredInput = sum(filteredInput, 2);
             inhibition = abs(n.Inputs(isDiv))' * filteredInput(isDiv);
+            inhibition = inhibition * 1e-3;
 %             if inhibition < 1
 %                 inhibition = 1;
 %             end

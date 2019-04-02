@@ -2,7 +2,7 @@
 
 clear
 addpath(genpath('~/Modeling/modeling_code/'));
-saveDir="~/Modeling/modeling_results/2019-03-28_parameter_comb_sim_syn_dep_PN_ORN_to_ORN_silenced"
+saveDir="~/Modeling/modeling_results/2019-04-02_stimulus_&_param_sweep"
 if ~isdir(saveDir)
     mkdir(saveDir)
 end
@@ -12,12 +12,13 @@ end
 % intensities = [1, 10, 100, 1000];
 intensities = [10, 100, 1e3, 1e4];
 
-% stimWaveforms = {'fast', 'med', 'slow', 'steps', 'square'};
+stimWaveforms = {'fast', 'med', 'slow', 'steps', 'square'};
 % stimWaveforms = {'fast', 'med', 'slow', 'square'};
-stimWaveforms = {'square'};
+% stimWaveforms = {'square'};
 
 % scalarSteps = [0, 1, 10, 100];
 scalarSteps = [0, 1, 5, 10];
+scalarSteps = [0, 0.1, 1, 5, 10];
 nScalarSteps = length(scalarSteps);
 
 %% Set model parameters
@@ -86,7 +87,7 @@ nModels = length(param);
 
 % Set number of runs per job, check to make sure # jobs doesn't exceed set
 % number.
-nRunsPerJob = 100;
+nRunsPerJob = 300;
 nJobs = ceil(nModels / nRunsPerJob);
 if nJobs > 300
     error('Number of jobs to be requested exceeds 300.')
@@ -107,7 +108,8 @@ end
 
 %% Set job (not run) parameters
 memGB = 2;
-timeLimitMin = 4 * nRunsPerJob; % Assuming a max of four minutes per model run
+% timeLimitMin = 4 * nRunsPerJob; % Assuming a max of four minutes per model run
+timeLimitMin = 360; % Assuming a max of four minutes per model run
 queueName = 'short';
 %% Submit job batches
 configCluster
