@@ -2,7 +2,7 @@
 
 clear
 addpath(genpath('~/Modeling/modeling_code/'));
-saveDir="~/Modeling/modeling_results/2019-04-02_stimulus_&_param_sweep"
+saveDir="~/Modeling/modeling_results/2019-04-11_parameter_sweep_filename_test"
 if ~isdir(saveDir)
     mkdir(saveDir)
 end
@@ -12,9 +12,9 @@ end
 % intensities = [1, 10, 100, 1000];
 intensities = [10, 100, 1e3, 1e4];
 
-stimWaveforms = {'fast', 'med', 'slow', 'steps', 'square'};
+% stimWaveforms = {'fast', 'med', 'slow', 'steps', 'square'};
 % stimWaveforms = {'fast', 'med', 'slow', 'square'};
-% stimWaveforms = {'square'};
+stimWaveforms = {'square'};
 
 % scalarSteps = [0, 1, 10, 100];
 scalarSteps = [0, 1, 5, 10];
@@ -25,8 +25,8 @@ nScalarSteps = length(scalarSteps);
 d = datetime('now', 'format', 'yyyy-MM-dd');
 d = char(d);
 
-for iStim = 1:length(stimWaveforms)
-    for iInt = 1:length(intensities)
+for iStim = 1%:length(stimWaveforms)
+    for iInt = 2%1:length(intensities)
         for sORN = 1:nScalarSteps
             for sPN = 1:nScalarSteps
                 for sLN = 1:nScalarSteps
@@ -67,7 +67,7 @@ for iStim = 1:length(stimWaveforms)
                                 end
                                 fname = strcat(fname, '_', fn{1}, '-', val);
                             end
-                            p.fname = fname;
+                            p.fname = [fname '.mat'];
                             clear fname
                             param(iStim, iInt, sORN, sPN, sLN, sLNtoORN, sLNtoLNPN) = p;
                         end
@@ -87,7 +87,7 @@ nModels = length(param);
 
 % Set number of runs per job, check to make sure # jobs doesn't exceed set
 % number.
-nRunsPerJob = 300;
+nRunsPerJob = 100;
 nJobs = ceil(nModels / nRunsPerJob);
 if nJobs > 300
     error('Number of jobs to be requested exceeds 300.')
