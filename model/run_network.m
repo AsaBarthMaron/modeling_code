@@ -1,4 +1,4 @@
-function [networkActivity, nn] = run_network(adjMat, neuronLabels, isDep, isDiv, isFac, taus, kernType, stimulus, iActivityInj)
+function [networkActivity, nn] = run_network(adjMat, neuronLabels, isDep, isDiv, isFac, taus, kernType, stimulus, iActivityInj, DepletionRate, TauReplenishment)
 % RUN_NETWORK creates a network and runs it for a single trial condition
 
 % Input parameters -
@@ -68,6 +68,11 @@ for iN = 1:length(nn)
     nn(iN).FR = ones(nn(iN).NSteps, 1);
     nn(iN).Rel = ones(nn(iN).NSteps, 1);
     nn(iN).SynRes = ones(nn(iN).NSteps, 1); % Value between 0 and 1
+end
+
+for iN = 2:3
+    nn(iN).DepletionRate = DepletionRate;
+    nn(iN).TauReplenishment = TauReplenishment;
 end
 
 % Set synaptic properties for specific connections. Logical matrices for

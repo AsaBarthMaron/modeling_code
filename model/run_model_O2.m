@@ -29,10 +29,10 @@ m.AdjMat(53, 2:3) = 0; % Silence PN-ORN connections
 m.AdjMat(2:3, 2:3) = 0; % Silence OR-ORN connections
 m.setStimulus(param.stimWav);
 m.setIntensity(param.intensity);
-m.setBaseline(2e3, 50);
+m.setBaseline(2e3, param.baseline);
 m.addBaseline();
 m.smoothStim(30);
-m.runExp();
+m.runExp(param.DepletionRate, param.TauReplenishment);
 
 m.Fname = fname;
 m.Param = param;

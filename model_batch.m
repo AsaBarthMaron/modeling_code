@@ -2,7 +2,8 @@
 
 clear
 addpath(genpath('~/Modeling/modeling_code/'));
-saveDir="~/Modeling/modeling_results/2019-04-11_parameter_sweep_filename_test"
+% saveDir="~/Modeling/modeling_results/2019-04-11_parameter_sweep_filename_test"
+saveDir="/n/scratch2/anb12/modeling_results/2019-04-11_parameter_sweep_filename_test"
 if ~isdir(saveDir)
     mkdir(saveDir)
 end
@@ -17,10 +18,9 @@ intensities = [100, 100, 1e3, 1e4];
 stimWaveforms = {'square'};
 
 % scalarSteps = [0, 1, 10, 100];
-% scalarSteps = [0,  1];
-scalarSteps = [0, 0.1, 1, 10];
+scalarSteps = [0, .1];
+% scalarSteps = [0, 0.1, 1, 10];
 nScalarSteps = length(scalarSteps);
-
 %% Set model parameters
 d = datetime('now', 'format', 'yyyy-MM-dd');
 d = char(d);
@@ -34,11 +34,14 @@ for iStim = 1%:length(stimWaveforms)
                         for sLNtoLNPN = 1:nScalarSteps
                             p.stimWav = stimWaveforms{iStim};
                             p.intensity = intensities(iInt);
+                            p.baseline = 50;
                             p.ORN = scalarSteps(sORN);
                             p.PN = scalarSteps(sPN);
                             p.LN = scalarSteps(sLN);
                             p.LNtoORN = scalarSteps(sLNtoORN);
                             p.LNtoLNPN = scalarSteps(sLNtoLNPN);
+                            p.DepletionRate = 0.3 * 1e-3; 
+                            p.TauReplenishment = 1000; 
                             p.fname = [];
                             
 %                             param(iStim, iInt, sORN, sPN, sLN, sLNtoORN, sLNtoLNPN)...
@@ -87,7 +90,7 @@ nModels = length(param);
 
 % Set number of runs per job, check to make sure # jobs doesn't exceed set
 % number.
-nRunsPerJob = 50;
+nRunsPerJob = 8;
 nJobs = ceil(nModels / nRunsPerJob);
 if nJobs > 300
     error('Number of jobs to be requested exceeds 300.')

@@ -15,7 +15,7 @@ classdef Neuron < handle
         FR              % Proxy for firing rate (not necessarily in spk/s)
         Rel             % Proxy for synaptic release. The quantity that downstream neurons actually see.
         DepletionRate   % Rate of synaptic resource depletion
-        TauRepleneshment% Tau of synaptic resource repleneshment 
+        TauReplenishment% Tau of synaptic resource repleneshment 
         SynRes          % Synaptic resources
     end
     
@@ -39,7 +39,7 @@ classdef Neuron < handle
             n.SynRes = ones(n.NSteps, 1);
             n.DepletionRate = 0.3 * 1e-3;     % Taken from Kathy's paper, units in terms of fraction per spike
 %             n.DepletionRate = 0.0073;     % Taken from Kathy's paper, units in terms of fraction per spike
-            n.TauRepleneshment = 1000; % Taken from Kathy's paper, units of ms
+            n.TauReplenishment = 1000; % Taken from Kathy's paper, units of ms
             
         end
         
@@ -98,10 +98,10 @@ classdef Neuron < handle
 %             % CALCRESOURCES uses methods described in my 2018-01-24
 %             % evernote note to calculate the synaptic resources
 %             % First step is to calculate the integral of d*r(t) + (1/Ta)
-%             % or: DepletionRate * FR + (1/TauRepleneshment)
-%             Y = exp(cumtrapz((n.DepletionRate .* n.Rel(1:timeStep-1))+ (1/n.TauRepleneshment)) );
+%             % or: DepletionRate * FR + (1/TauReplenishment)
+%             Y = exp(cumtrapz((n.DepletionRate .* n.Rel(1:timeStep-1))+ (1/n.TauReplenishment)) );
 %             Y(Y == Inf) = realmax;
-%             LHS = (cumtrapz(Y) ./ (Y .* n.TauRepleneshment)) + (1 ./ Y);
+%             LHS = (cumtrapz(Y) ./ (Y .* n.TauReplenishment)) + (1 ./ Y);
 %             LHS(isnan(LHS)) = 0;
 %             n.SynRes = LHS;
 %         end
@@ -109,9 +109,9 @@ classdef Neuron < handle
 %             % CALCRESOURCES uses methods described in my 2018-01-24
 %             % evernote note to calculate the synaptic resources
 %             % First step is to calculate the integral of d*r(t) + (1/Ta)
-%             % or: DepletionRate * FR + (1/TauRepleneshment)
+%             % or: DepletionRate * FR + (1/TauReplenishment)
 %             intgrlRt = cumtrapz(n.Rel(1:timeStep-1));
-%             expRep = exp(1/n.TauRepleneshment);
+%             expRep = exp(1/n.TauReplenishment);
 %             expDRt = exp(n.DepletionRate * intgrlRt);
 %             Y = expRep * expDRt;
 %             numerator = exp(Y) + (
@@ -121,14 +121,14 @@ classdef Neuron < handle
 %             % CALCRESOURCES uses methods described in my 2018-01-24
 %             % evernote note to calculate the synaptic resources
 %             % First step is to calculate the integral of d*r(t) + (1/Ta)
-%             % or: DepletionRate * FR + (1/TauRepleneshment)
+%             % or: DepletionRate * FR + (1/TauReplenishment)
 %             C = 1;
 %             intgrlRt = cumtrapz(n.Rel(1:timeStep-1));
-%             expRep = exp(1 / n.TauRepleneshment);
+%             expRep = exp(1 / n.TauReplenishment);
 %             expDR = exp(n.DepletionRate .* intgrlRt);
 %             Y = expRep * expDR;
-%             numerator = cumtrapz(Y) + (n.TauRepleneshment .* C); 
-%             denom = n.TauRepleneshment .* Y;
+%             numerator = cumtrapz(Y) + (n.TauReplenishment .* C); 
+%             denom = n.TauReplenishment .* Y;
 %             At = (numerator ./ denom);
 %             n.SynRes = At;
 %             
@@ -137,9 +137,9 @@ classdef Neuron < handle
             % CALCRESOURCES uses methods described in my 2018-01-24
             % evernote note to calculate the synaptic resources
             % First step is to calculate the integral of d*r(t) + (1/Ta)
-            % or: DepletionRate * FR + (1/TauRepleneshment)
+            % or: DepletionRate * FR + (1/TauReplenishment)
             At = n.SynRes(timeStep-1);
-            Ta = n.TauRepleneshment;
+            Ta = n.TauReplenishment;
             d = n.DepletionRate;
             Rt = n.Rel(timeStep-1);
             dAtdt = -d * Rt * At + ((1-At)/Ta);

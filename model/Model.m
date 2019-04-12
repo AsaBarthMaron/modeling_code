@@ -73,8 +73,8 @@ classdef Model < Stim & handle
             m.AdjMat(2:end, 2:end) = m.AdjMat(2:end, 2:end) ./ sum(abs(m.AdjMat(2:end,2:end)), 1); 
         end
         
-        function m = runExp(m)
-            [m.NetworkActivity, m.nn] = run_network(m.AdjMat, m.NeuronLabels, m.IsDep, m.IsDiv, m.IsFac, m.Taus, m.KernType, m.Stimulus, m.ILNs(m.TypeInds.y));
+        function m = runExp(m, DepletionRate, TauReplenishment)
+            [m.NetworkActivity, m.nn] = run_network(m.AdjMat, m.NeuronLabels, m.IsDep, m.IsDiv, m.IsFac, m.Taus, m.KernType, m.Stimulus, m.ILNs(m.TypeInds.y), DepletionRate, TauReplenishment);
         end
         
         function m = runVarStim(m)
