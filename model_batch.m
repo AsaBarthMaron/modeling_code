@@ -14,65 +14,72 @@ end
 intensities = [100, 100, 1e3, 1e4];
 
 % stimWaveforms = {'fast', 'med', 'slow', 'steps', 'square'};
-% stimWaveforms = {'fast', 'med', 'slow', 'square'};
-stimWaveforms = {'square'};
+stimWaveforms = {'fast', 'med', 'slow', 'square'};
+% stimWaveforms = {'square'};
 
 % scalarSteps = [0, 1, 10, 100];
-scalarSteps = [0, .1];
-% scalarSteps = [0, 0.1, 1, 10];
+% scalarSteps = [0, .1];
+scalarSteps = [0, 0.1, 1, 10];
 nScalarSteps = length(scalarSteps);
+
+depletionRates = [0.3e-1, 0.3e-2, 0.3e-3, 0.3e-4];
+replenishmentTaus = [1e2, 1e3, 1e4, 1e5];
 %% Set model parameters
 d = datetime('now', 'format', 'yyyy-MM-dd');
 d = char(d);
 
-for iStim = 1%:length(stimWaveforms)
-    for iInt = 1%1:length(intensities)
-        for sORN = 1:nScalarSteps
-            for sPN = 1:nScalarSteps
-                for sLN = 1:nScalarSteps
-                    for sLNtoORN = 1:nScalarSteps
-                        for sLNtoLNPN = 1:nScalarSteps
-                            p.stimWav = stimWaveforms{iStim};
-                            p.intensity = intensities(iInt);
-                            p.baseline = 50;
-                            p.ORN = scalarSteps(sORN);
-                            p.PN = scalarSteps(sPN);
-                            p.LN = scalarSteps(sLN);
-                            p.LNtoORN = scalarSteps(sLNtoORN);
-                            p.LNtoLNPN = scalarSteps(sLNtoLNPN);
-                            p.DepletionRate = 0.3 * 1e-3; 
-                            p.TauReplenishment = 1000; 
-                            p.fname = [];
-                            
-%                             param(iStim, iInt, sORN, sPN, sLN, sLNtoORN, sLNtoLNPN)...
-%                                 .stimWaveform = stimWaveforms(iStim);
-%                             param(iStim, iInt, sORN, sPN, sLN, sLNtoORN, sLNtoLNPN)...
-%                                 .intensity = intensities(iInt);
-%                             param(iStim, iInt, sORN, sPN, sLN, sLNtoORN, sLNtoLNPN)...
-%                                 .ORN = scalarSteps(sORN);
-%                             param(iStim, iInt, sORN, sPN, sLN, sLNtoORN, sLNtoLNPN)...
-%                                 .PN = scalarSteps(sPN);
-%                             param(iStim, iInt, sORN, sPN, sLN, sLNtoORN, sLNtoLNPN)...
-%                                 .LN = scalarSteps(sLN);
-%                             param(iStim, iInt, sORN, sPN, sLN, sLNtoORN, sLNtoLNPN)...
-%                                 .LNtoORN = scalarSteps(sLNtoORN);
-%                             param(iStim, iInt, sORN, sPN, sLN, sLNtoORN, sLNtoLNPN)...
-%                                 .LNtoLNPN = scalarSteps(sLNtoLNPN);
-                            
-                            % Set save filename
-                            fname = d;
-                            fields = fieldnames(p);
-                            fields(find(strcmp(fields, 'fname'))) = [];
-                            for fn = fields'
-                                val = p.(fn{1});
-                                if isnumeric(val)
-                                    val = num2str(val);
+for iDep = 1:length(depletionRates)
+    for iTauRep = 1:length(replenishmentTaus)
+        for iStim = 1:length(stimWaveforms)
+            for iInt = 1:length(intensities)
+                for sORN = 1:nScalarSteps
+                    for sPN = 1:nScalarSteps
+                        for sLN = 1:nScalarSteps
+                            for sLNtoORN = 1:nScalarSteps
+                                for sLNtoLNPN = 1:nScalarSteps
+                                    p.stimWav = stimWaveforms{iStim};
+                                    p.intensity = intensities(iInt);
+                                    p.baseline = 50;
+                                    p.ORN = scalarSteps(sORN);
+                                    p.PN = scalarSteps(sPN);
+                                    p.LN = scalarSteps(sLN);
+                                    p.LNtoORN = scalarSteps(sLNtoORN);
+                                    p.LNtoLNPN = scalarSteps(sLNtoLNPN);
+                                    p.DepletionRate = depletionRates(iDep); 
+                                    p.TauReplenishment = replenishmentTaus(iTauRep); 
+                                    p.fname = [];
+
+        %                             param(iStim, iInt, sORN, sPN, sLN, sLNtoORN, sLNtoLNPN)...
+        %                                 .stimWaveform = stimWaveforms(iStim);
+        %                             param(iStim, iInt, sORN, sPN, sLN, sLNtoORN, sLNtoLNPN)...
+        %                                 .intensity = intensities(iInt);
+        %                             param(iStim, iInt, sORN, sPN, sLN, sLNtoORN, sLNtoLNPN)...
+        %                                 .ORN = scalarSteps(sORN);
+        %                             param(iStim, iInt, sORN, sPN, sLN, sLNtoORN, sLNtoLNPN)...
+        %                                 .PN = scalarSteps(sPN);
+        %                             param(iStim, iInt, sORN, sPN, sLN, sLNtoORN, sLNtoLNPN)...
+        %                                 .LN = scalarSteps(sLN);
+        %                             param(iStim, iInt, sORN, sPN, sLN, sLNtoORN, sLNtoLNPN)...
+        %                                 .LNtoORN = scalarSteps(sLNtoORN);
+        %                             param(iStim, iInt, sORN, sPN, sLN, sLNtoORN, sLNtoLNPN)...
+        %                                 .LNtoLNPN = scalarSteps(sLNtoLNPN);
+
+                                    % Set save filename
+                                    fname = d;
+                                    fields = fieldnames(p);
+                                    fields(find(strcmp(fields, 'fname'))) = [];
+                                    for fn = fields'
+                                        val = p.(fn{1});
+                                        if isnumeric(val)
+                                            val = num2str(val);
+                                        end
+                                        fname = strcat(fname, '_', fn{1}, '-', val);
+                                    end
+                                    p.fname = fname;
+                                    clear fname
+                                    param(iStim, iInt, sORN, sPN, sLN, sLNtoORN, sLNtoLNPN) = p;
                                 end
-                                fname = strcat(fname, '_', fn{1}, '-', val);
                             end
-                            p.fname = fname;
-                            clear fname
-                            param(iStim, iInt, sORN, sPN, sLN, sLNtoORN, sLNtoLNPN) = p;
                         end
                     end
                 end
@@ -80,7 +87,6 @@ for iStim = 1%:length(stimWaveforms)
         end
     end
 end
-
 %% Do some stuff to figure out how many batches, runs / batch, and their allocation
 
 % Reshape run parameters so they can be more easily allocated to jobs
@@ -90,7 +96,7 @@ nModels = length(param);
 
 % Set number of runs per job, check to make sure # jobs doesn't exceed set
 % number.
-nRunsPerJob = 8;
+nRunsPerJob = 250;
 nJobs = ceil(nModels / nRunsPerJob);
 if nJobs > 300
     error('Number of jobs to be requested exceeds 300.')
