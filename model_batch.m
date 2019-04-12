@@ -10,14 +10,14 @@ end
 %% Create parameter combinations
 
 % intensities = [1, 10, 100, 1000];
-intensities = [10, 100, 1e3, 1e4];
+intensities = [100, 100, 1e3, 1e4];
 
 % stimWaveforms = {'fast', 'med', 'slow', 'steps', 'square'};
 % stimWaveforms = {'fast', 'med', 'slow', 'square'};
 stimWaveforms = {'square'};
 
 % scalarSteps = [0, 1, 10, 100];
-scalarSteps = [0, 1, 5, 10];
+scalarSteps = [0, 0.1, 1];
 % scalarSteps = [0, 0.1, 1, 5, 10];
 nScalarSteps = length(scalarSteps);
 
@@ -26,7 +26,7 @@ d = datetime('now', 'format', 'yyyy-MM-dd');
 d = char(d);
 
 for iStim = 1%:length(stimWaveforms)
-    for iInt = 2%1:length(intensities)
+    for iInt = 1%1:length(intensities)
         for sORN = 1:nScalarSteps
             for sPN = 1:nScalarSteps
                 for sLN = 1:nScalarSteps

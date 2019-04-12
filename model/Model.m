@@ -87,7 +87,8 @@ classdef Model < Stim & handle
         function m = saveResults(m, fname, saveDir)
 %             d = datetime('now', 'format', 'yyyy-MM-dd');
 %             fname = [char(d) '_' argString '.mat'];
-            save(fullfile(saveDir, fname), 'm');
+            saveFile = strcat(fullfile(saveDir, fname), '.mat');
+            save(saveFile, 'm');
         end
                 
         function plotResults(m)
