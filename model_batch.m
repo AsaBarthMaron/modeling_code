@@ -17,8 +17,8 @@ intensities = [100, 100, 1e3, 1e4];
 stimWaveforms = {'square'};
 
 % scalarSteps = [0, 1, 10, 100];
-scalarSteps = [0,  1];
-% scalarSteps = [0, 0.1, 1, 5, 10];
+% scalarSteps = [0,  1];
+scalarSteps = [0, 0.1, 1, 10];
 nScalarSteps = length(scalarSteps);
 
 %% Set model parameters
@@ -87,7 +87,7 @@ nModels = length(param);
 
 % Set number of runs per job, check to make sure # jobs doesn't exceed set
 % number.
-nRunsPerJob = 100;
+nRunsPerJob = 50;
 nJobs = ceil(nModels / nRunsPerJob);
 if nJobs > 300
     error('Number of jobs to be requested exceeds 300.')
