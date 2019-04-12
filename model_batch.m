@@ -17,7 +17,7 @@ intensities = [100, 100, 1e3, 1e4];
 stimWaveforms = {'square'};
 
 % scalarSteps = [0, 1, 10, 100];
-scalarSteps = [0, 0.1, 1];
+scalarSteps = [0,  1];
 % scalarSteps = [0, 0.1, 1, 5, 10];
 nScalarSteps = length(scalarSteps);
 
@@ -107,7 +107,7 @@ for iRun = 1:nJobs
 end
 
 %% Set job (not run) parameters
-memGB = 2;
+memGB = 4;
 % timeLimitMin = 4 * nRunsPerJob; % Assuming a max of four minutes per model run
 timeLimitMin = 360; % Assuming a max of four minutes per model run
 queueName = 'short';
