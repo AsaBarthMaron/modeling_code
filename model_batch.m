@@ -18,7 +18,7 @@ stimWaveforms = {'square'};
 
 % scalarSteps = [0, 1, 10, 100];
 scalarSteps = [0, 1, 5, 10];
-scalarSteps = [0, 0.1, 1, 5, 10];
+% scalarSteps = [0, 0.1, 1, 5, 10];
 nScalarSteps = length(scalarSteps);
 
 %% Set model parameters
@@ -67,7 +67,7 @@ for iStim = 1%:length(stimWaveforms)
                                 end
                                 fname = strcat(fname, '_', fn{1}, '-', val);
                             end
-                            p.fname = [fname '.mat'];
+                            p.fname = fname;
                             clear fname
                             param(iStim, iInt, sORN, sPN, sLN, sLNtoORN, sLNtoLNPN) = p;
                         end
