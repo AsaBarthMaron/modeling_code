@@ -3,10 +3,10 @@
 clear
 addpath(genpath('~/Modeling/modeling_code/'));
 % saveDir="~/Modeling/modeling_results/2019-04-11_parameter_sweep_filename_test"
-saveDir="/n/scratch2/anb12/modeling_results/2019-04-11_parameter_sweep_filename_test"
-if ~isdir(saveDir)
-    mkdir(saveDir)
-end
+saveDir="/n/scratch2/anb12/modeling_results/2019-04-13_synaptic_depression_param"
+% if ~isdir(saveDir)
+%     mkdir(saveDir)
+% end
 
 %% Create parameter combinations
 
@@ -34,17 +34,17 @@ for iDep = 1:length(depletionRates)
             for iInt = 1:length(intensities)
                 for sORN = 1:nScalarSteps
                     for sPN = 1:nScalarSteps
-                        for sLN = 1:nScalarSteps
+%                         for sLN = 1:nScalarSteps
                             for sLNtoORN = 1:nScalarSteps
-                                for sLNtoLNPN = 1:nScalarSteps
+%                                 for sLNtoLNPN = 1:nScalarSteps
                                     p.stimWav = stimWaveforms{iStim};
                                     p.intensity = intensities(iInt);
                                     p.baseline = 50;
                                     p.ORN = scalarSteps(sORN);
                                     p.PN = scalarSteps(sPN);
-                                    p.LN = scalarSteps(sLN);
+%                                     p.LN = scalarSteps(sLN);
                                     p.LNtoORN = scalarSteps(sLNtoORN);
-                                    p.LNtoLNPN = scalarSteps(sLNtoLNPN);
+%                                     p.LNtoLNPN = scalarSteps(sLNtoLNPN);
                                     p.DepletionRate = depletionRates(iDep); 
                                     p.TauReplenishment = replenishmentTaus(iTauRep); 
                                     p.fname = [];
@@ -77,10 +77,10 @@ for iDep = 1:length(depletionRates)
                                     end
                                     p.fname = fname;
                                     clear fname
-                                    param(iStim, iInt, sORN, sPN, sLN, sLNtoORN, sLNtoLNPN) = p;
-                                end
+                                    param(iStim, iInt, sORN, sPN, sLNtoORN, iDep, iTauRep) = p;
+%                                 end
                             end
-                        end
+%                         end
                     end
                 end
             end
@@ -96,7 +96,7 @@ nModels = length(param);
 
 % Set number of runs per job, check to make sure # jobs doesn't exceed set
 % number.
-nRunsPerJob = 250;
+nRunsPerJob = 100;
 nJobs = ceil(nModels / nRunsPerJob);
 if nJobs > 300
     error('Number of jobs to be requested exceeds 300.')
@@ -118,7 +118,7 @@ end
 %% Set job (not run) parameters
 memGB = 4;
 % timeLimitMin = 4 * nRunsPerJob; % Assuming a max of four minutes per model run
-timeLimitMin = 360; % Assuming a max of four minutes per model run
+timeLimitMin = 600; % Assuming a max of four minutes per model run
 queueName = 'short';
 %% Submit job batches
 configCluster
