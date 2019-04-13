@@ -14,9 +14,9 @@ function run_model_O2(param, fname, saveDir)
 scalar = struct;
 scalar.ORN = param.ORN;        % Should not be done in combination with ORNtoLNPN, ORN-ORN
 scalar.PN = param.PN;          % Should not be done in combination with LNtoLNPN, LN-ORN
-scalar.LN = param.LN;          % Should not be done in combination with LNtoLNPN, LN-ORN
+% scalar.LN = param.LN;          % Should not be done in combination with LNtoLNPN, LN-ORN
 scalar.LNtoORN = param.LNtoORN;
-scalar.LNtoLNPN = param.LNtoLNPN;
+% scalar.LNtoLNPN = param.LNtoLNPN;
 
 m = Model();
 m.init();   % This works for now only because we're not yet playing with 

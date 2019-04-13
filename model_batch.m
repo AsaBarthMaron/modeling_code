@@ -28,14 +28,14 @@ replenishmentTaus = [1e2, 1e3, 1e4, 1e5];
 d = datetime('now', 'format', 'yyyy-MM-dd');
 d = char(d);
 
-for iDep = 1:2%length(depletionRates)
-    for iTauRep = 1:2%length(replenishmentTaus)
-        for iStim = 1:2%length(stimWaveforms)
-            for iInt = 1:2%length(intensities)
-                for sORN = 2%1:nScalarSteps
-                    for sPN = 1:2%nScalarSteps
+for iDep = 1:length(depletionRates)
+    for iTauRep = 1:length(replenishmentTaus)
+        for iStim = 1:length(stimWaveforms)
+            for iInt = 1:length(intensities)
+                for sORN = 1:nScalarSteps
+                    for sPN = 1:nScalarSteps
 %                         for sLN = 1:nScalarSteps
-                            for sLNtoORN = 1:2%nScalarSteps
+                            for sLNtoORN = 1:nScalarSteps
 %                                 for sLNtoLNPN = 1:nScalarSteps
                                     p.stimWav = stimWaveforms{iStim};
                                     p.intensity = intensities(iInt);
@@ -96,7 +96,7 @@ nModels = length(param);
 
 % Set number of runs per job, check to make sure # jobs doesn't exceed set
 % number.
-nRunsPerJob = 20;
+nRunsPerJob = 100;
 nJobs = ceil(nModels / nRunsPerJob);
 if nJobs > 300
     error('Number of jobs to be requested exceeds 300.')
@@ -118,7 +118,7 @@ end
 %% Set job (not run) parameters
 memGB = 4;
 % timeLimitMin = 4 * nRunsPerJob; % Assuming a max of four minutes per model run
-timeLimitMin = 120; % Assuming a max of four minutes per model run
+timeLimitMin = 600; % Assuming a max of four minutes per model run
 queueName = 'short';
 %% Submit job batches
 configCluster
