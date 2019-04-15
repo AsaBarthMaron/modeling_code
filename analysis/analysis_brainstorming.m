@@ -112,6 +112,7 @@ cd(saveDir)
 % cd('/Users/asa/Modeling/modeling_results/2019-04-13_synaptic_depression_param')
 
 rSq = NaN([paramD(3:end), 2, 2]); % 2 cells & 2 triplets
+rWindow = (2e3+1):10e3;
 
 for sORN = 2%1:paramD(3)
     for sPN = 2%1:paramD(4)
@@ -128,9 +129,9 @@ for sORN = 2%1:paramD(3)
                     for iSet = 1:2
                         for iPN = 1:nPNs
                             % Select model set
-                            ms = modelSets(:, :, iSet:iSet+2);
+                            ms = modelSets(rWindow+2e3, :, iSet:iSet+2);
                             % Select PN (2019-01-22, 2019-01-31)
-                            ps = pnMat(:, :, :, iPN);
+                            ps = pnMat(rWindow, :, :, iPN);
                             % Calculate set correlation
                             r = corr(ms(:), ps(:));
                             % Assign R^2
