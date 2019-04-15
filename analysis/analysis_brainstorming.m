@@ -121,11 +121,8 @@ tic
 % c.AdditionalProperties.QueueName = 'short';
 % parpool(6)
 for sORN = 1:paramD(3)
-   for sPN = 1:paramD(4)
-       iChunk = ((sORN-1)*4) + sPN;
-       disp([num2str(iChunk) ' / 1024 sets completed'])
-       toc
-       for sLNtoORN = 1:paramD(5)
+    for sPN = 1:paramD(4)
+        for sLNtoORN = 1:paramD(5)
             for iDep = 1:paramD(6)
                 for iTauRep = 1:paramD(7)
                     for iStim = 1:(paramD(1) - 1) % Not doing square for now
@@ -151,6 +148,10 @@ for sORN = 1:paramD(3)
                 end
             end
         end
+        iChunk = ((sORN-1)*4) + sPN;
+        iChunk = iChunk * 64;
+        disp([num2str(iChunk) ' / 1024 sets completed'])
+        toc
     end
 end
 toc
