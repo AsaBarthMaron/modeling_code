@@ -115,13 +115,16 @@ rSq = NaN([paramD(3:end), 2, 2]); % 2 cells & 2 triplets
 rWindow = (2e3+1):10e3;
 
 tic
-configCluster;
-c = parcluster('o2 local R2018a');
-c.AdditionalProperties.WallTime = '01:00:00';
-c.AdditionalProperties.QueueName = 'short';
-parpool(6)
-parfor sORN = 1:paramD(3)
-   parfor sPN = 1:paramD(4)
+% configCluster;
+% c = parcluster('o2 local R2018a');
+% c.AdditionalProperties.WallTime = '01:00:00';
+% c.AdditionalProperties.QueueName = 'short';
+% parpool(6)
+for sORN = 1:paramD(3)
+   for sPN = 1:paramD(4)
+       iChunk = ((sORN-1)*4) + sPN;
+       disp([num2str(iChunk) ' / 1024 sets completed'])
+       toc
        for sLNtoORN = 1:paramD(5)
             for iDep = 1:paramD(6)
                 for iTauRep = 1:paramD(7)
