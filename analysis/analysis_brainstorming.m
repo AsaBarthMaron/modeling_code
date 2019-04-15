@@ -115,10 +115,11 @@ rSq = NaN([paramD(3:end), 2, 2]); % 2 cells & 2 triplets
 rWindow = (2e3+1):10e3;
 
 tic
+configCluster;
 c = parcluster('o2 local R2018a');
 c.AdditionalProperties.WallTime = '01:00:00';
 c.AdditionalProperties.QueueName = 'short';
-parpool(10)
+parpool(6)
 parfor sORN = 1:paramD(3)
    parfor sPN = 1:paramD(4)
        for sLNtoORN = 1:paramD(5)
@@ -127,8 +128,8 @@ parfor sORN = 1:paramD(3)
                     for iStim = 1:(paramD(1) - 1) % Not doing square for now
                         for iInt = 1:paramD(2)
                             p = param(iStim, iInt, sORN, sPN, sLNtoORN, iDep, iTauRep);
-                            load([p.fname '.mat']);
-                            modelSets(:, iStim, iInt) = m.NetworkActivity(53, :);
+                            yesM = load([p.fname '.mat']);
+                            modelSets(:, iStim, iInt) = yesM.m.NetworkActivity(53, :);
                         end
                     end
                     for iSet = 1:2
