@@ -114,11 +114,13 @@ cd(saveDir)
 rSq = NaN([paramD(3:end), 2, 2]); % 2 cells & 2 triplets
 rWindow = (2e3+1):10e3;
 
-for sORN = 2%1:paramD(3)
-    for sPN = 2%1:paramD(4)
-        for sLNtoORN = 2%1:paramD(5)
+tic
+parpool(4)
+parfor sORN = 1:paramD(3)
+   parfor sPN = 1:paramD(4)
+       for sLNtoORN = 1:paramD(5)
             for iDep = 1:paramD(6)
-                for iTauRep = 2%1:paramD(7)
+                for iTauRep = 1:paramD(7)
                     for iStim = 1:(paramD(1) - 1) % Not doing square for now
                         for iInt = 1:paramD(2)
                             p = param(iStim, iInt, sORN, sPN, sLNtoORN, iDep, iTauRep);
@@ -144,7 +146,7 @@ for sORN = 2%1:paramD(3)
         end
     end
 end
-
+toc
 
 
 
