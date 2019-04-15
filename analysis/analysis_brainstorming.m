@@ -1,5 +1,5 @@
 clear
-mb = load('~/Modeling/modeling_results/2019-04-13_synaptic_depression_param/2019-04-13_synaptic_dep_batch_workspace.mat');
+mb = load('/n/scratch2/anb12/modeling_results/2019-04-13_synaptic_depression_param/2019-04-13_synaptic_dep_batch_workspace.mat');
 param = mb.param;
 paramD = mb.paramD;
 nModels = mb.nModels;
@@ -27,7 +27,7 @@ param = reshape(param, paramD(1), paramD(2), paramD(3), paramD(4), paramD(5), pa
 % for now I have decided to not look at the 'square' stimuli.
 
 % Now let's load the PN responses we want.
-pnData = load('/Users/asa/Documents/Data/optogenetic_LN_stim/2019-04-05_PN_odor_analysis/2019-04-09_square_varstim_annotated_blocks.mat')
+pnData = load('/n/scratch2/anb12/modeling_results/2019-04-09_square_varstim_annotated_blocks.mat')
 pn(1:2) = pnData.vs([3, 5]);
 for iPN = 1:length(pn)
     pn(iPN).four = [];
@@ -109,8 +109,8 @@ pnMat = pnMat(:);
 % Each set has 3 waveforms and 4 stimuli.
 % Each set will produce two triplet comparisons to PN data.
 % This is done to prevent data being loaded in duplicate.
-% cd(saveDir)
-cd('/Users/asa/Modeling/modeling_results/2019-04-13_synaptic_depression_param')
+cd(saveDir)
+% cd('/Users/asa/Modeling/modeling_results/2019-04-13_synaptic_depression_param')
 
 rSq = NaN([paramD(3:end), 2, 2]); % 2 cells & 2 triplets
 
@@ -122,7 +122,7 @@ for sORN = 2%1:paramD(3)
                     for iStim = 1:(paramD(1) - 1) % Not doing square for now
                         for iInt = 1:paramD(2)
                             p = param(iStim, iInt, sORN, sPN, sLNtoORN, iDep, iTauRep);
-                            load(p.fname);
+                            load([p.fname '.mat']);
                             modelSets(:, iStim, iInt) = m.NetworkActivity(53, :);
                             
                             for iSet = 1:2
@@ -133,7 +133,7 @@ for sORN = 2%1:paramD(3)
                                     ps = pnMat(:, :, :, iPN);
                                     % Calculate set correlation
                                     r = corr(ms(:), ps(:));
-                                     % Assign R^2
+                                    % Assign R^2
                                     rSq(sORN, sPN, sLNtoORN, iDep, iTauRep...
                                         , iSet, iPN) = r^2;
                                 end
