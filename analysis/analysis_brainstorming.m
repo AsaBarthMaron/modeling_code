@@ -57,12 +57,12 @@ pn(2).one = mean(pn(2).one,3);
 %     hold on
 %     plot(pn(2).two(:,i), 'linewidth', 2)
 % end
-% 
+%
 % figure
 % j = 1;
 % vFields = {'four', 'two', 'one'};
 % for fn = vFields
-%     
+%
 %     for i = 1:3
 %         for iPN = 1:2
 %             iPlot = j + ((i-1) * 3);
@@ -78,7 +78,7 @@ pn(2).one = mean(pn(2).one,3);
 %             set(gca, 'box', 'off', 'fontsize', 20)
 %         end
 %     end
-%     
+%
 %     j = j+1;
 % end
 % for i = 1:3:9
@@ -104,7 +104,6 @@ for iPN = 1:nPNs
 end
 os = pn(1).os;
 pnD = size(pnMat);
-pnMat = pnMat(:);
 %% Load model sets & Perform analysis
 % Each set has 3 waveforms and 4 stimuli.
 % Each set will produce two triplet comparisons to PN data.
@@ -125,18 +124,18 @@ for sORN = 2%1:paramD(3)
                             load([p.fname '.mat']);
                             modelSets(:, iStim, iInt) = m.NetworkActivity(53, :);
                         end
-                        for iSet = 1:2
-                            for iPN = 1:nPNs
-                                % Select model set
-                                ms = modelSets(:, :, iSet:iSet+2);
-                                % Select PN (2019-01-22, 2019-01-31)
-                                ps = pnMat(:, :, :, iPN);
-                                % Calculate set correlation
-                                r = corr(ms(:), ps(:));
-                                % Assign R^2
-                                rSq(sORN, sPN, sLNtoORN, iDep, iTauRep...
-                                    , iSet, iPN) = r^2;
-                            end
+                    end
+                    for iSet = 1:2
+                        for iPN = 1:nPNs
+                            % Select model set
+                            ms = modelSets(:, :, iSet:iSet+2);
+                            % Select PN (2019-01-22, 2019-01-31)
+                            ps = pnMat(:, :, :, iPN);
+                            % Calculate set correlation
+                            r = corr(ms(:), ps(:));
+                            % Assign R^2
+                            rSq(sORN, sPN, sLNtoORN, iDep, iTauRep...
+                                , iSet, iPN) = r^2;
                         end
                     end
                 end
@@ -144,8 +143,8 @@ for sORN = 2%1:paramD(3)
         end
     end
 end
-                                
-                                
-                                
-                                
-                                
+
+
+
+
+
