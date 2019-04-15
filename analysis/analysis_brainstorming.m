@@ -124,19 +124,18 @@ for sORN = 2%1:paramD(3)
                             p = param(iStim, iInt, sORN, sPN, sLNtoORN, iDep, iTauRep);
                             load([p.fname '.mat']);
                             modelSets(:, iStim, iInt) = m.NetworkActivity(53, :);
-                            
-                            for iSet = 1:2
-                                for iPN = 1:nPNs
-                                    % Select model set
-                                    ms = modelSets(:, :, iSet:iSet+2);
-                                    % Select PN (2019-01-22, 2019-01-31)
-                                    ps = pnMat(:, :, :, iPN);
-                                    % Calculate set correlation
-                                    r = corr(ms(:), ps(:));
-                                    % Assign R^2
-                                    rSq(sORN, sPN, sLNtoORN, iDep, iTauRep...
-                                        , iSet, iPN) = r^2;
-                                end
+                        end
+                        for iSet = 1:2
+                            for iPN = 1:nPNs
+                                % Select model set
+                                ms = modelSets(:, :, iSet:iSet+2);
+                                % Select PN (2019-01-22, 2019-01-31)
+                                ps = pnMat(:, :, :, iPN);
+                                % Calculate set correlation
+                                r = corr(ms(:), ps(:));
+                                % Assign R^2
+                                rSq(sORN, sPN, sLNtoORN, iDep, iTauRep...
+                                    , iSet, iPN) = r^2;
                             end
                         end
                     end
