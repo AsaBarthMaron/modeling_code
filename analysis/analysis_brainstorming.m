@@ -115,7 +115,10 @@ rSq = NaN([paramD(3:end), 2, 2]); % 2 cells & 2 triplets
 rWindow = (2e3+1):10e3;
 
 tic
-parpool(4)
+c = parcluster('o2 local R2018a');
+c.AdditionalProperties.WallTime = '01:00:00';
+c.AdditionalProperties.QueueName = 'short';
+parpool(10)
 parfor sORN = 1:paramD(3)
    parfor sPN = 1:paramD(4)
        for sLNtoORN = 1:paramD(5)
