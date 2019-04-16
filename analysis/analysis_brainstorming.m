@@ -1,4 +1,5 @@
 clear
+% mb = load('~/Modeling/modeling_results/2019-04-13_synaptic_depression_param_workspace/2019-04-13_synaptic_dep_batch_workspace.mat');
 mb = load('/n/scratch2/anb12/modeling_results/2019-04-13_synaptic_depression_param/2019-04-13_synaptic_dep_batch_workspace.mat');
 param = mb.param;
 paramD = mb.paramD;
@@ -27,6 +28,7 @@ param = reshape(param, paramD(1), paramD(2), paramD(3), paramD(4), paramD(5), pa
 % for now I have decided to not look at the 'square' stimuli.
 
 % Now let's load the PN responses we want.
+% pnData = load('~/Documents/Data/optogenetic_LN_stim/2019-04-05_PN_odor_analysis/2019-04-09_square_varstim_annotated_blocks.mat')
 pnData = load('/n/scratch2/anb12/modeling_results/2019-04-09_square_varstim_annotated_blocks.mat')
 pn(1:2) = pnData.vs([3, 5]);
 for iPN = 1:length(pn)
@@ -98,29 +100,26 @@ pn(2).one = mean(pn(2).one,3);
 %% Arrange PN data matrix
 nPNs = 2;
 for iPN = 1:nPNs
-    pnMat(:,:,1, iPN) = downsample(pn(iPN).one, 10);
+    pnMat(:,:,3, iPN) = downsample(pn(iPN).one, 10);
     pnMat(:,:,2, iPN) = downsample(pn(iPN).two, 10);
-    pnMat(:,:,3, iPN) = downsample(pn(iPN).four, 10);
+    pnMat(:,:,1, iPN) = downsample(pn(iPN).four, 10);
 end
 os = pn(1).os;
 pnD = size(pnMat);
+pnMat = pnMat * 1e3;
 %% Load model sets & Perform analysis
 % Each set has 3 waveforms and 4 stimuli.
 % Each set will produce two triplet comparisons to PN data.
 % This is done to prevent data being loaded in duplicate.
 cd(saveDir)
-% cd('/Users/asa/Modeling/modeling_results/2019-04-13_synaptic_depression_param')
+% cd('/Users/asa/Modeling/modeling_results/2019-04-13_synaptic_depression_param/2019-04-13_synaptic_depression_param')
 
 rSq = NaN([paramD(3:end), 2, 2]); % 2 cells & 2 triplets
 rWindow = (2e3+1):10e3;
 
 tic
-% configCluster;
-% c = parcluster('o2 local R2018a');
-% c.AdditionalProperties.WallTime = '01:00:00';
-% c.AdditionalProperties.QueueName = 'short';
-% parpool(6)
-for sORN = 1:paramD(3)
+parpool(4)
+parfor sORN = 1:paramD(3)
     for sPN = 1:paramD(4)
         for sLNtoORN = 1:paramD(5)
             for iDep = 1:paramD(6)
@@ -132,12 +131,12 @@ for sORN = 1:paramD(3)
                             modelSets(:, iStim, iInt) = yesM.m.NetworkActivity(53, :);
                         end
                     end
-                    for iSet = 1:2
+                    for iSet = 2 % Intensity = 100 was run in duplicate, so only 1 set (100, 1e3, 1e4)
                         for iPN = 1:nPNs
                             % Select model set
                             ms = modelSets(rWindow+2e3, :, iSet:iSet+2);
                             % Select PN (2019-01-22, 2019-01-31)
-                            ps = pnMat(rWindow, :, :, iPN) * 1e3;
+                            ps = pnMat(rWindow, :, :, iPN);
                             % Calculate set correlation
                             r = corr(ms(:), ps(:));
                             % Assign R^2
@@ -155,6 +154,7 @@ for sORN = 1:paramD(3)
     end
 end
 toc
+% save('~/Modeling/modeling_results/2019-04-16-pn_model_analysis.mat');
 save('/n/scratch2/anb12/modeling_results/2019-04-16-pn_model_analysis.mat');
 
 
