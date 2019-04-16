@@ -137,7 +137,7 @@ for sORN = 1:paramD(3)
                             % Select model set
                             ms = modelSets(rWindow+2e3, :, iSet:iSet+2);
                             % Select PN (2019-01-22, 2019-01-31)
-                            ps = pnMat(rWindow, :, :, iPN);
+                            ps = pnMat(rWindow, :, :, iPN) * 1e3;
                             % Calculate set correlation
                             r = corr(ms(:), ps(:));
                             % Assign R^2
@@ -155,7 +155,7 @@ for sORN = 1:paramD(3)
     end
 end
 toc
-
+save('/n/scratch2/anb12/modeling_results/2019-04-16-pn_model_analysis.mat');
 
 
 
