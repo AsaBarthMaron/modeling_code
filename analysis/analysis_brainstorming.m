@@ -118,8 +118,8 @@ rSq = NaN([paramD(3:end), 2, 2]); % 2 cells & 2 triplets
 rWindow = (2e3+1):10e3;
 
 tic
-parpool(4)
-parfor sORN = 1:paramD(3)
+% parpool(4)
+for sORN = 1:paramD(3)
     for sPN = 1:paramD(4)
         for sLNtoORN = 1:paramD(5)
             for iDep = 1:paramD(6)
