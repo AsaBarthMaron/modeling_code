@@ -1,6 +1,6 @@
 clear
 % mb = load('~/Modeling/modeling_results/2019-04-13_synaptic_depression_param_workspace/2019-04-13_synaptic_dep_batch_workspace.mat');
-mb = load('/n/scratch2/anb12/modeling_results/2019-04-13_synaptic_depression_param/2019-04-13_synaptic_dep_batch_workspace.mat');
+mb = load('/n/scratch2/anb12/modeling_results/2019-04-24_unnormalized_synaptic_depression_param_workspace.mat');
 param = mb.param;
 paramD = mb.paramD;
 nModels = mb.nModels;
@@ -155,7 +155,7 @@ for sORN = 1:paramD(3)
 end
 toc
 % save('~/Modeling/modeling_results/2019-04-16-pn_model_analysis.mat');
-save('/n/scratch2/anb12/modeling_results/2019-04-16-pn_model_analysis.mat');
+save('/n/scratch2/anb12/modeling_results/2019-04-27-pn_model_analysis_unnorm.mat');
 
 
 
