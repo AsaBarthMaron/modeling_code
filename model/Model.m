@@ -47,9 +47,9 @@ classdef Model < Stim & handle
         
         function m = init(m)
             nNs = length(m.Taus) - 1; % Assumes 1 stimulus dimension
-            m.normalizeInputContacts()
-            scalingMatrix = ones(nNs, nNs) * 10;
-            m.scaleCons(scalingMatrix);
+%             m.normalizeInputContacts()
+%             scalingMatrix = ones(nNs, nNs) * 10;
+%             m.scaleCons(scalingMatrix);
 %             m.runExp();
 %             m.varStim();
 %             m.runVarStim();

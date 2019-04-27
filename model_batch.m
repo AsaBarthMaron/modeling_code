@@ -3,7 +3,7 @@
 clear
 addpath(genpath('~/Modeling/modeling_code/'));
 % saveDir="~/Modeling/modeling_results/2019-04-11_parameter_sweep_filename_test"
-saveDir="/n/scratch2/anb12/modeling_results/2019-04-13_synaptic_depression_param"
+saveDir="/n/scratch2/anb12/modeling_results/2019-04-24_unnormalized_synaptic_depression_param"
 if ~isdir(saveDir)
     mkdir(saveDir)
 end
