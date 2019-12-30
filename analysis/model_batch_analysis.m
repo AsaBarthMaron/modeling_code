@@ -1,9 +1,10 @@
 clear
-mb = load('/Users/asa/Modeling/modeling_results/2019-03-28_parameter_comb_sim_syn_dep_PN_ORN_to_ORN_silenced/2019-03-28_ORN_PN_to_ORN_0_model_batch_workspace.mat');
+mb = load('/Users/asa/Modeling/modeling_results/2019-04-24_unnormalized_synaptic_depression_param_workspace/2019-04-24_unnormalized_synaptic_depression_param_workspace.mat');
 param = mb.param;
 paramD = mb.paramD;
 nModels = mb.nModels;
 saveDir = mb.saveDir;
+saveDir = '/Users/asa/Modeling/modeling_results/2019-04-24_unnormalized_synaptic_depression_param';
 fields = mb.fields;
 % 
 % for iModel = 1:nModels
@@ -28,7 +29,7 @@ p = p(:);
 
 disp('Loading data...')
 for iModel = 1:length(p)
-    tmpModel = load(fullfile(saveDir, p(iModel).fname));
+    tmpModel = load([fullfile(saveDir, p(iModel).fname) '.mat']);
     m(iModel) = tmpModel.m;
 end
 disp('Data loaded')
@@ -40,7 +41,7 @@ m = reshape(m, pD(1), pD(2), pD(3));
 close all
 
 for iConType = 1:pD(3)
-    fn = fields(iConType + 2);
+    fn = fields(iConType + 3);
     figure
     subplot(4,4,1)
     for iScalarVal = 1:pD(2)
@@ -52,10 +53,10 @@ for iConType = 1:pD(3)
             iORNRel = m(iIntensity, iScalarVal, iConType).nn(2).Rel;
 
             plot(pnFR(1e3:(3.5e3-1)), 'linewidth', 1.5)
-            plot(iORNSynRes(1e3:(3.5e3-1)), 'linewidth', 1.5)
+%             plot(iORNSynRes(1e3:(3.5e3-1)), 'linewidth', 1.5)
             hold on
-            plot(iORNRel(1e3:(3.5e3-1))/8, 'linewidth', 1.5)
-            ylim([0 1])
+%             plot(iORNRel(1e3:(3.5e3-1))/8, 'linewidth', 1.5)
+%             ylim([0 1])
 
             set(gca, 'box', 'off', 'fontsize', 18)
         end
@@ -69,7 +70,7 @@ for iConType = 1:pD(3)
         subplot(4,4, iXPlot)
         title(['Stimulus intensity - ', num2str(p(iXPlot, 1, iConType).intensity), 'x']);
     end
-%     legend({'PN firing rate'})
-    legend({'iORN Synaptic resources', 'iORN release'})
+    legend({'PN firing rate'})
+%     legend({'iORN Synaptic resources', 'iORN release'})
 end
 

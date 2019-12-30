@@ -4,9 +4,9 @@ clear
 addpath(genpath('~/Modeling/modeling_code/'));
 % saveDir="~/Modeling/modeling_results/2019-04-11_parameter_sweep_filename_test"
 saveDir="/n/scratch2/anb12/modeling_results/2019-04-24_unnormalized_synaptic_depression_param"
-if ~isdir(saveDir)
-    mkdir(saveDir)
-end
+% if ~isdir(saveDir)
+%     mkdir(saveDir)
+% end
 
 %% Create parameter combinations
 
@@ -26,7 +26,8 @@ depletionRates = [0.3e-1, 0.3e-2, 0.3e-3, 0.3e-4];
 replenishmentTaus = [1e2, 1e3, 1e4, 1e5];
 %% Set model parameters
 d = datetime('now', 'format', 'yyyy-MM-dd');
-d = char(d);
+% d = char(d);
+d = '2019-04-24';
 
 for iDep = 1:length(depletionRates)
     for iTauRep = 1:length(replenishmentTaus)
