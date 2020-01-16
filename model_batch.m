@@ -3,7 +3,7 @@
 clear
 addpath(genpath('~/Modeling/modeling_code/'));
 % saveDir="~/Modeling/modeling_results/2019-04-11_parameter_sweep_filename_test"
-saveDir="/n/scratch2/anb12/modeling_results/2019-04-24_unnormalized_synaptic_depression_param"
+saveDir="/n/scratch2/anb12/modeling_results/2020-01-16_test_batch"
 % if ~isdir(saveDir)
 %     mkdir(saveDir)
 % end
@@ -11,11 +11,12 @@ saveDir="/n/scratch2/anb12/modeling_results/2019-04-24_unnormalized_synaptic_dep
 %% Create parameter combinations
 
 % intensities = [1, 10, 100, 1000];
-intensities = [100, 100, 1e3, 1e4];
+% intensities = [100, 100, 1e3, 1e4];
+intensities = [100, 100, 1e3];
 
 % stimWaveforms = {'fast', 'med', 'slow', 'steps', 'square'};
-stimWaveforms = {'fast', 'med', 'slow', 'square'};
-% stimWaveforms = {'square'};
+% stimWaveforms = {'fast', 'med', 'slow', 'square'};
+stimWaveforms = {'square'};
 
 % scalarSteps = [0, 1, 10, 100];
 % scalarSteps = [0, .1];

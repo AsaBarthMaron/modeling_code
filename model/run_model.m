@@ -68,7 +68,7 @@ end
 % adjMat(typeInds.rem, :) = 0;
 %% Run the model
 % adjMat(1,3) = 0.5;
-[networkActivity, nn] = run_network(adjMat, neuronLabels, isDep, isDiv, isFac, taus, kernType, stimulus, iLNs(typeInds.y));
+[networkActivity, nn] = run_network(adjMat, neuronLabels, isDep, isDiv, isFac, taus, kernType, stimulus, iLNs(typeInds.y), 0.3 * 1e-3, 1e3);
 
 
 %%
