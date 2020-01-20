@@ -11,8 +11,8 @@ end
 %% Create parameter combinations
 
 % intensities = [1, 10, 100, 1000];
-% intensities = [100, 100, 1e3, 1e4];
-intensities = [100, 100, 1e3];
+intensities = [100, 100, 1e3, 1e4];
+% intensities = [100, 100, 1e3];
 
 % stimWaveforms = {'fast', 'med', 'slow', 'steps', 'square'};
 % stimWaveforms = {'fast', 'med', 'slow', 'square'};

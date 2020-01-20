@@ -1,10 +1,10 @@
 clear
-mb = load('/Users/asa/Modeling/modeling_results/2019-04-24_unnormalized_synaptic_depression_param_workspace/2019-04-24_unnormalized_synaptic_depression_param_workspace.mat');
+mb = load('/Users/asa/Modeling/modeling_results/2020-01-16_test_batch_workspace/2020-01-16_test_batch_workspace.mat');
 param = mb.param;
 paramD = mb.paramD;
 nModels = mb.nModels;
 saveDir = mb.saveDir;
-saveDir = '/Users/asa/Modeling/modeling_results/2019-04-24_unnormalized_synaptic_depression_param';
+saveDir = '/Users/asa/Modeling/modeling_results/2020-01-16_test_batch';
 fields = mb.fields;
 % 
 % for iModel = 1:nModels
@@ -25,6 +25,7 @@ p(:,:,4) = squeeze(param(1,:,2,2,2,:,2));
 p(:,:,5) = squeeze(param(1,:,2,2,2,2,:));
 
 pD = size(p);
+nIntensities = pD(1);
 p = p(:);
 
 disp('Loading data...')
@@ -43,11 +44,11 @@ close all
 for iConType = 1:pD(3)
     fn = fields(iConType + 3);
     figure
-    subplot(4,4,1)
+    subplot(4,nIntensities,1)
     for iScalarVal = 1:pD(2)
-        for iIntensity = 1:pD(1)
-            iPlot = sub2ind([4, 4], iIntensity, iScalarVal);
-            subplot(4,4, iPlot)
+        for iIntensity = 1:nIntensities
+            iPlot = sub2ind([nIntensities, 4], iIntensity, iScalarVal);
+            subplot(4,nIntensities, iPlot)
             pnFR = m(iIntensity, iScalarVal, iConType).NetworkActivity(53,:);
             iORNSynRes = m(iIntensity, iScalarVal, iConType).nn(2).SynRes;
             iORNRel = m(iIntensity, iScalarVal, iConType).nn(2).Rel;
@@ -61,13 +62,13 @@ for iConType = 1:pD(3)
             set(gca, 'box', 'off', 'fontsize', 18)
         end
     end
-    yPlots = 1:4:16;
+    yPlots = 1:nIntensities:(4*nIntensities);
     for iYPlot = 1:4
-        subplot(4,4, yPlots(iYPlot))
+        subplot(4,nIntensities, yPlots(iYPlot))
         ylabel([fn{1}, ' - ', num2str(p(1, iYPlot, iConType).(fn{1}))]);
     end
-    for iXPlot = 1:4
-        subplot(4,4, iXPlot)
+    for iXPlot = 1:nIntensities
+        subplot(4,nIntensities, iXPlot)
         title(['Stimulus intensity - ', num2str(p(iXPlot, 1, iConType).intensity), 'x']);
     end
     legend({'PN firing rate'})
