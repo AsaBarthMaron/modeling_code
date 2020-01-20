@@ -3,7 +3,7 @@
 clear
 addpath(genpath('~/Modeling/modeling_code/'));
 % saveDir="~/Modeling/modeling_results/2019-04-11_parameter_sweep_filename_test"
-saveDir="/n/scratch2/anb12/modeling_results/2020-01-16_test_batch"
+saveDir="/n/scratch2/anb12/modeling_results/2020-01-20_LN_silencing_batch"
 if ~isdir(saveDir)
     mkdir(saveDir)
 end
