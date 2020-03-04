@@ -97,6 +97,9 @@ networkRelease = inputActivity;
 networkActivity = inputActivity;
 
 
+% Design activity vector for activity injection
+injMag = 100;   % Free parameter
+activityInj = normalize(stimulus, 'range') * injMag;
 
 %% Run the trial. All values are calculated one step at a time using the
 % forward euler method.
@@ -128,7 +131,7 @@ for timeStep = (kernLen + 1):runTime
     inputActivity(iDep, timeStep-1) = networkRelease(iDep, timeStep-1);
     inputActivity(~iDep, timeStep-1) = networkFR(~iDep, timeStep-1);
    
-    if timeStep == 522
+    if timeStep == 2522
         x = 1;
     end
     % Add noise to all input activity for this timestep
@@ -148,7 +151,13 @@ for timeStep = (kernLen + 1):runTime
         networkRelease(iN, timeStep) = nn(iN).Rel(timeStep); 
 %         tTic(iN, timeStep) = toc(startTic);
     end
-
+    
+    % Inject activity into subset of neurons
+    % Note, that I am only injecting into networkFR, not nn(iN).FR, but
+    % this shouldn't matter except for the first sample because networkFR
+    % is used to calculate nn.(iN).FR for all future timesteps.
+    networkFR(iActivityInj, timeStep) = networkFR(iActivityInj, timeStep) + activityInj(timeStep);
+    
 %     timing(timeStep) = toc(startTic);
 end
 toc(startTic)

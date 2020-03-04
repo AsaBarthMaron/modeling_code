@@ -49,8 +49,8 @@ classdef Model < Stim & handle
             nNs = length(m.Taus) - 1; % Assumes 1 stimulus dimension
             m.normalizeInputContacts()
             scalingMatrix = ones(nNs, nNs) * 10;
-            silenceInds = m.ILNs(m.TypeInds.d) - 1; % -1 b/c 'scaleCons' starts at index 2 (ignoring stimulus dimension)
-            scalingMatrix(silenceInds, :) = 0;
+%             silenceInds = m.ILNs(m.TypeInds.d) - 1; % -1 b/c 'scaleCons' starts at index 2 (ignoring stimulus dimension)
+%             scalingMatrix(silenceInds, :) = 0;
             m.scaleCons(scalingMatrix);
 %             m.runExp();
 %             m.varStim();
