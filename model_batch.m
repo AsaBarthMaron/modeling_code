@@ -3,7 +3,7 @@
 clear
 addpath(genpath('~/Modeling/modeling_code/'));
 % saveDir="~/Modeling/modeling_results/2019-04-11_parameter_sweep_filename_test"
-saveDir="/n/scratch2/anb12/modeling_results/2020-03-04_LN_activation_batch_y"
+saveDir="/n/scratch2/anb12/modeling_results/2020-03-11_LN_activation_batch_y"
 if ~isdir(saveDir)
     mkdir(saveDir)
 end
@@ -97,7 +97,7 @@ nModels = length(param);
 
 % Set number of runs per job, check to make sure # jobs doesn't exceed set
 % number.
-nRunsPerJob = 100;
+nRunsPerJob = 50;
 nJobs = ceil(nModels / nRunsPerJob);
 if nJobs > 300
     error('Number of jobs to be requested exceeds 300.')

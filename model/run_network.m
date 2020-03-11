@@ -98,7 +98,7 @@ networkActivity = inputActivity;
 
 
 % Design activity vector for activity injection
-injMag = 100;   % Free parameter
+injMag = 1000;   % Free parameter
 activityInj = normalize(stimulus, 'range') * injMag;
 
 %% Run the trial. All values are calculated one step at a time using the
