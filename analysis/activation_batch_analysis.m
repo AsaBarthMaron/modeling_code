@@ -10,7 +10,7 @@ fields = mb.fields;
 % Set structures & vars for handling models across LN manipulations.
 lnManip = {'ctrl', 'y', 'ts', 'd'};
 saveDir{1} = '/Users/asa/Modeling/modeling_results/2020-01-20_LN_silencing_batch';
-saveDir{2} = ['/Users/asa/Modeling/modeling_results/2020-03-04_LN_activation_batch', '_y'];
+saveDir{2} = ['/Users/asa/Modeling/modeling_results/2020-03-11_LN_activation_batch', '_y'];
 saveDir{3} = [saveDir{2}(1:end-2), '_ts'];
 saveDir{4} = [saveDir{2}(1:end-2), '_d'];
 
@@ -54,66 +54,67 @@ for iParam = 1:nParam
 end
 toc
 % save('/Users/asa/Modeling/modeling_results/2020-01-20_LN_silencing_batch_workspace/2020-01-20_LN_silencing_batch_analysis.mat');
+save('/n/scratch2/anb12/modeling_results/2020-03-11_activation_batch_analysis.mat');
 
 % Plot histogram of each metric
-figure
-subplot(2,2,1)
-histogram(pk(:))
-
-subplot(2,2,2)
-histogram(ss(:))
-
-subplot(2,2,3)
-histogram(mn(:))
-
-subplot(2,2,4)
-histogram(int(:))
-
-
-%% 
-df_pk = pk(:, 1) - pk(:, 2:end);
-df_ss = ss(:, 1) - ss(:, 2:end);
-df_mn =  mn(:, 1) - mn(:, 2:end);
-df_int = int(:, 1) - int(:, 2:end);
-
-plotInds = [1:100, nParam-100+1:nParam];
-
-figure
-subplot(2,2,1)
-tmp = sort(df_pk, 'descend');
-plot(tmp(plotInds, :), '*')
-legend(lnManip(2:end))
-title ('Peak FR diff')
-xlabel('Top & bottom 100 models')
-ylabel('Diff: Ctrl - LN pert.')
-set(gca, 'fontsize', 20, 'box', 'off', 'tickdir', 'out')
-
-subplot(2,2,2)
-tmp = sort(df_ss, 'descend');
-plot(tmp(plotInds, :), '*')
-legend(lnManip(2:end))
-title ('Steady-state FR diff')
-xlabel('Top & bottom 100 models')
-ylabel('Diff: Ctrl - LN pert.')
-set(gca, 'fontsize', 20, 'box', 'off', 'tickdir', 'out')
-
-subplot(2,2,3)
-tmp = sort(df_mn, 'descend');
-plot(tmp(plotInds, :), '*')
-legend(lnManip(2:end))
-title ('Min post-stimulus diff')
-xlabel('Top & bottom 100 models')
-ylabel('Diff: Ctrl - LN pert.')
-set(gca, 'fontsize', 20, 'box', 'off', 'tickdir', 'out')
-
-subplot(2,2,4)
-tmp = sort(df_int, 'descend');
-plot(tmp(plotInds, :), '*')
-legend(lnManip(2:end))
-title ('Integrated diff')
-xlabel('Top & bottom 100 models')
-ylabel('Diff: Ctrl - LN pert.')
-set(gca, 'fontsize', 20, 'box', 'off', 'tickdir', 'out')
+% figure
+% subplot(2,2,1)
+% histogram(pk(:))
+% 
+% subplot(2,2,2)
+% histogram(ss(:))
+% 
+% subplot(2,2,3)
+% histogram(mn(:))
+% 
+% subplot(2,2,4)
+% histogram(int(:))
+% 
+% 
+% %% 
+% df_pk = pk(:, 1) - pk(:, 2:end);
+% df_ss = ss(:, 1) - ss(:, 2:end);
+% df_mn =  mn(:, 1) - mn(:, 2:end);
+% df_int = int(:, 1) - int(:, 2:end);
+% 
+% plotInds = [1:100, nParam-100+1:nParam];
+% 
+% figure
+% subplot(2,2,1)
+% tmp = sort(df_pk, 'descend');
+% plot(tmp(plotInds, :), '*')
+% legend(lnManip(2:end))
+% title ('Peak FR diff')
+% xlabel('Top & bottom 100 models')
+% ylabel('Diff: Ctrl - LN pert.')
+% set(gca, 'fontsize', 20, 'box', 'off', 'tickdir', 'out')
+% 
+% subplot(2,2,2)
+% tmp = sort(df_ss, 'descend');
+% plot(tmp(plotInds, :), '*')
+% legend(lnManip(2:end))
+% title ('Steady-state FR diff')
+% xlabel('Top & bottom 100 models')
+% ylabel('Diff: Ctrl - LN pert.')
+% set(gca, 'fontsize', 20, 'box', 'off', 'tickdir', 'out')
+% 
+% subplot(2,2,3)
+% tmp = sort(df_mn, 'descend');
+% plot(tmp(plotInds, :), '*')
+% legend(lnManip(2:end))
+% title ('Min post-stimulus diff')
+% xlabel('Top & bottom 100 models')
+% ylabel('Diff: Ctrl - LN pert.')
+% set(gca, 'fontsize', 20, 'box', 'off', 'tickdir', 'out')
+% 
+% subplot(2,2,4)
+% tmp = sort(df_int, 'descend');
+% plot(tmp(plotInds, :), '*')
+% legend(lnManip(2:end))
+% title ('Integrated diff')
+% xlabel('Top & bottom 100 models')
+% ylabel('Diff: Ctrl - LN pert.')
+% set(gca, 'fontsize', 20, 'box', 'off', 'tickdir', 'out')
 %% Quick batch analysis - no con type param combinations
 
 % for iModel = 1:nModels
