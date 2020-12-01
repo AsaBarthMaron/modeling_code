@@ -76,7 +76,7 @@ classdef Model < Stim & handle
         end
         
         function m = runExp(m, DepletionRate, TauReplenishment)
-            [m.NetworkActivity, m.nn] = run_network(m.AdjMat, m.NeuronLabels, m.IsDep, m.IsDiv, m.IsFac, m.Taus, m.KernType, m.Stimulus, m.ILNs(m.TypeInds.y), DepletionRate, TauReplenishment);
+            [m.NetworkActivity, m.nn] = run_network(m.AdjMat, m.NeuronLabels, m.IsDep, m.IsDiv, m.IsFac, m.Taus, m.KernType, m.Stimulus, m.ILNs(m.TypeInds.d), DepletionRate, TauReplenishment);
         end
         
         function m = runVarStim(m)

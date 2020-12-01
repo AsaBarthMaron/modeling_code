@@ -2,8 +2,8 @@
 
 clear
 addpath(genpath('~/Modeling/modeling_code/'));
-% saveDir="~/Modeling/modeling_results/2019-04-11_parameter_sweep_filename_test"
-saveDir="/n/scratch2/anb12/modeling_results/2020-03-11_LN_activation_batch_y"
+saveDir="~/Modeling/modeling_results/2020-11-19_testing"
+% saveDir="/n/scratch2/anb12/modeling_results/2020-03-11_LN_activation_batch_y"
 if ~isdir(saveDir)
     mkdir(saveDir)
 end
@@ -11,7 +11,8 @@ end
 %% Create parameter combinations
 
 % intensities = [1, 10, 100, 1000];
-intensities = [100, 100, 1e3, 1e4];
+intensities = [10, 100, 1e3, 1e4];
+intensities = 100;
 % intensities = [100, 100, 1e3];
 
 % stimWaveforms = {'fast', 'med', 'slow', 'steps', 'square'};
@@ -19,12 +20,15 @@ intensities = [100, 100, 1e3, 1e4];
 stimWaveforms = {'square'};
 
 % scalarSteps = [0, 1, 10, 100];
-% scalarSteps = [0, .1];
+scalarSteps = [0, .1];
 scalarSteps = [0, 0.1, 1, 10];
+scalarSteps = 1;
 nScalarSteps = length(scalarSteps);
 
 depletionRates = [0.3e-1, 0.3e-2, 0.3e-3, 0.3e-4];
 replenishmentTaus = [1e2, 1e3, 1e4, 1e5];
+depletionRates = [0.3e-3];
+replenishmentTaus = [1e3];
 %% Set model parameters
 d = datetime('now', 'format', 'yyyy-MM-dd');
 d = char(d);

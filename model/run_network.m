@@ -85,7 +85,8 @@ end
 % Create a noise matrix
 rng(1)
 cn = dsp.ColoredNoise('Color','white','NumChannels', nNeurons, 'SamplesPerFrame',runTime);
-noise = cn()' * 0.35;
+% noise = cn()' * 0.35;
+noise = cn()';
 
 % Matrix for holding network activity values
 inputActivity = ones(length(nn), runTime);
@@ -98,7 +99,7 @@ networkActivity = inputActivity;
 
 
 % Design activity vector for activity injection
-injMag = 1000;   % Free parameter
+injMag = 100;   % Free parameter
 activityInj = normalize(stimulus, 'range') * injMag;
 
 %% Run the trial. All values are calculated one step at a time using the
@@ -135,7 +136,7 @@ for timeStep = (kernLen + 1):runTime
         x = 1;
     end
     % Add noise to all input activity for this timestep
-%     inputActivity(:, timeStep-1) = inputActivity(:, timeStep-1) + noise(:, timeStep-1);
+    inputActivity(:, timeStep-1) = inputActivity(:, timeStep-1) + noise(:, timeStep-1);
 %     inputActivity(iActivityInj, timeStep-1) = inputActivity(iActivityInj, timeStep-1) + 100;
     
     for iN = 2:length(nn)
