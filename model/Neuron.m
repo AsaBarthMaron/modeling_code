@@ -10,6 +10,7 @@ classdef Neuron < handle
         RunTime         % Duration of trial run
         Tau             % Time constant of neuron
         TauKrn          % Dynamics kernel
+        Inhibition
         Inputs          % Connection weights from other neurons in Network
         Vm              % Proxy for subthreshold voltage (not in proper units)
         FR              % Proxy for firing rate (not necessarily in spk/s)
@@ -32,6 +33,7 @@ classdef Neuron < handle
             n.Tau = 15;
             n.TauKrn = exp((1:300)/n.Tau);
             n.TauKrn = n.TauKrn ./ sum(n.TauKrn);
+            n.Inhibition = zeros(n.NSteps, 1);
             n.Inputs = [];
             n.Vm = zeros(n.NSteps, 1);
             n.FR = zeros(n.NSteps, 1);
@@ -66,11 +68,10 @@ classdef Neuron < handle
                              .* n.TauKrn;
             filteredInput = sum(filteredInput, 2);
             inhibition = abs(n.Inputs(isDiv))' * filteredInput(isDiv);
-            inhibition = inhibition * 1e-3;
-%             if inhibition < 1
-%                 inhibition = 1;
-%             end
-            if inhibition > 0 
+%             inhibition = inhibition * 1e-3;
+            
+            n.Inhibition(timeStep) = inhibition;
+            if inhibition > 1 
                 n.Rel(timeStep) = n.Rel(timeStep) ./ inhibition;
             else
 %                 n.FR(timeStep) = n.FR(timeStep);

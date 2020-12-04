@@ -1,4 +1,4 @@
-function [networkActivity, nn] = run_network(adjMat, neuronLabels, isDep, isDiv, isFac, taus, kernType, stimulus, iActivityInj, DepletionRate, TauReplenishment)
+function [networkActivity, nn] = run_network(adjMat, neuronLabels, isDep, isDiv, taus, kernType, stimulus, iActivityInj, DepletionRate, TauReplenishment)
 % RUN_NETWORK creates a network and runs it for a single trial condition
 
 % Input parameters -
@@ -26,6 +26,8 @@ timeStep = 1;   % Sample at which to initialize model
 runTime = length(stimulus); % Model run time (in samples)
 
 %% Construct network
+iORNs = 262:311;
+% iORNs = 202:251;
 
 nNeurons = length(neuronLabels);
 kernLen = 300;  % Length of kernel for endowing response dynamics. Note 
@@ -70,17 +72,10 @@ for iN = 1:length(nn)
     nn(iN).SynRes = ones(nn(iN).NSteps, 1); % Value between 0 and 1
 end
 
-for iN = 2:3
+for iN = iORNs
     nn(iN).DepletionRate = DepletionRate;
     nn(iN).TauReplenishment = TauReplenishment;
 end
-
-% Set synaptic properties for specific connections. Logical matrices for
-% all connections. Why am I doing this and not just passing in logical
-% matrices for each thing? 
-% isDiv = false(nNeurons, nNeurons);
-% isDep = false(nNeurons, nNeurons);
-% isFac = false(nNeurons, nNeurons);
 
 % Create a noise matrix
 rng(1)
@@ -97,9 +92,8 @@ networkFR = inputActivity;
 networkRelease = inputActivity;
 networkActivity = inputActivity;
 
-
 % Design activity vector for activity injection
-injMag = 100;   % Free parameter
+injMag = 1;   % Free parameter
 activityInj = normalize(stimulus, 'range') * injMag;
 
 %% Run the trial. All values are calculated one step at a time using the
@@ -132,11 +126,11 @@ for timeStep = (kernLen + 1):runTime
     inputActivity(iDep, timeStep-1) = networkRelease(iDep, timeStep-1);
     inputActivity(~iDep, timeStep-1) = networkFR(~iDep, timeStep-1);
    
-    if timeStep == 2522
+    if timeStep == 2222
         x = 1;
     end
     % Add noise to all input activity for this timestep
-    inputActivity(:, timeStep-1) = inputActivity(:, timeStep-1) + noise(:, timeStep-1);
+%     inputActivity(:, timeStep-1) = inputActivity(:, timeStep-1) + noise(:, timeStep-1);
 %     inputActivity(iActivityInj, timeStep-1) = inputActivity(iActivityInj, timeStep-1) + 100;
     
     for iN = 2:length(nn)
@@ -144,7 +138,7 @@ for timeStep = (kernLen + 1):runTime
         nn(iN).rectify(timeStep);
         networkFR(iN, timeStep) = nn(iN).FR(timeStep); 
     end
-    for iN = 2:3
+    for iN = iORNs
         nn(iN).Rel(timeStep) = nn(iN).FR(timeStep);
         nn(iN).divInhibition(inputActivity, timeStep, isDiv(:, iN));
         nn(iN).calcResources(timeStep);
@@ -157,7 +151,7 @@ for timeStep = (kernLen + 1):runTime
     % Note, that I am only injecting into networkFR, not nn(iN).FR, but
     % this shouldn't matter except for the first sample because networkFR
     % is used to calculate nn.(iN).FR for all future timesteps.
-    networkFR(iActivityInj, timeStep) = networkFR(iActivityInj, timeStep) + activityInj(timeStep);
+%     networkFR(iActivityInj, timeStep) = networkFR(iActivityInj, timeStep) + activityInj(timeStep);
     
 %     timing(timeStep) = toc(startTic);
 end
