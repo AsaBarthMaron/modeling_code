@@ -2,7 +2,7 @@
 
 clear
 addpath(genpath('~/Modeling/modeling_code/'));
-saveDir="~/Modeling/modeling_results/2020-11-19_testing"
+saveDir="~/Modeling/modeling_results/2020-12-03_hemibrain_batch"
 % saveDir="/n/scratch2/anb12/modeling_results/2020-03-11_LN_activation_batch_y"
 if ~isdir(saveDir)
     mkdir(saveDir)
@@ -12,7 +12,6 @@ end
 
 % intensities = [1, 10, 100, 1000];
 intensities = [10, 100, 1e3, 1e4];
-intensities = 100;
 % intensities = [100, 100, 1e3];
 
 % stimWaveforms = {'fast', 'med', 'slow', 'steps', 'square'};
@@ -20,78 +19,55 @@ intensities = 100;
 stimWaveforms = {'square'};
 
 % scalarSteps = [0, 1, 10, 100];
-scalarSteps = [0, .1];
 scalarSteps = [0, 0.1, 1, 10];
-scalarSteps = 1;
 nScalarSteps = length(scalarSteps);
 
-depletionRates = [0.3e-1, 0.3e-2, 0.3e-3, 0.3e-4];
-replenishmentTaus = [1e2, 1e3, 1e4, 1e5];
-depletionRates = [0.3e-3];
-replenishmentTaus = [1e3];
 %% Set model parameters
 d = datetime('now', 'format', 'yyyy-MM-dd');
 d = char(d);
 
-for iDep = 1:length(depletionRates)
-    for iTauRep = 1:length(replenishmentTaus)
-        for iStim = 1:length(stimWaveforms)
-            for iInt = 1:length(intensities)
-                for sORN = 1:nScalarSteps
-                    for sPN = 1:nScalarSteps
-%                         for sLN = 1:nScalarSteps
-                            for sLNtoORN = 1:nScalarSteps
-%                                 for sLNtoLNPN = 1:nScalarSteps
-                                    p.stimWav = stimWaveforms{iStim};
-                                    p.intensity = intensities(iInt);
-                                    p.baseline = 20;
-                                    p.ORN = scalarSteps(sORN);
-                                    p.PN = scalarSteps(sPN);
-%                                     p.LN = scalarSteps(sLN);
-                                    p.LNtoORN = scalarSteps(sLNtoORN);
-%                                     p.LNtoLNPN = scalarSteps(sLNtoLNPN);
-                                    p.DepletionRate = depletionRates(iDep); 
-                                    p.TauReplenishment = replenishmentTaus(iTauRep); 
-                                    p.fname = [];
-
-        %                             param(iStim, iInt, sORN, sPN, sLN, sLNtoORN, sLNtoLNPN)...
-        %                                 .stimWaveform = stimWaveforms(iStim);
-        %                             param(iStim, iInt, sORN, sPN, sLN, sLNtoORN, sLNtoLNPN)...
-        %                                 .intensity = intensities(iInt);
-        %                             param(iStim, iInt, sORN, sPN, sLN, sLNtoORN, sLNtoLNPN)...
-        %                                 .ORN = scalarSteps(sORN);
-        %                             param(iStim, iInt, sORN, sPN, sLN, sLNtoORN, sLNtoLNPN)...
-        %                                 .PN = scalarSteps(sPN);
-        %                             param(iStim, iInt, sORN, sPN, sLN, sLNtoORN, sLNtoLNPN)...
-        %                                 .LN = scalarSteps(sLN);
-        %                             param(iStim, iInt, sORN, sPN, sLN, sLNtoORN, sLNtoLNPN)...
-        %                                 .LNtoORN = scalarSteps(sLNtoORN);
-        %                             param(iStim, iInt, sORN, sPN, sLN, sLNtoORN, sLNtoLNPN)...
-        %                                 .LNtoLNPN = scalarSteps(sLNtoLNPN);
-
-                                    % Set save filename
-                                    fname = d;
-                                    fields = fieldnames(p);
-                                    fields(find(strcmp(fields, 'fname'))) = [];
-                                    for fn = fields'
-                                        val = p.(fn{1});
-                                        if isnumeric(val)
-                                            val = num2str(val);
-                                        end
-                                        fname = strcat(fname, '_', fn{1}, '-', val);
-                                    end
-                                    p.fname = fname;
-                                    clear fname
-                                    param(iStim, iInt, sORN, sPN, sLNtoORN, iDep, iTauRep) = p;
-%                                 end
+for iStim = 1:length(stimWaveforms)
+    for iInt = 1:length(intensities)
+        for sORNtoORN = 1:nScalarSteps
+            for sORNtoLNPN = 1:nScalarSteps
+                for sPN = 1:nScalarSteps
+                    for sLNtoORN = 1:nScalarSteps
+                        for sLNtoLNPN = 1:nScalarSteps
+                            % Set parameters
+                            p.stimWav = stimWaveforms{iStim};
+                            p.intensity = intensities(iInt);
+                            p.baseline = 20;
+                            p.ORNtoORN = scalarSteps(sORNtoORN);
+                            p.ORNtoLNPN = scalarSteps(sORNtoLNPN);
+                            p.PN = scalarSteps(sPN);
+                            p.LNtoORN = scalarSteps(sLNtoORN);
+                            p.LNtoLNPN = scalarSteps(sLNtoLNPN);
+                            p.DepletionRate = 0.3e-3;
+                            p.TauReplenishment = 1e3;
+                            p.fname = [];
+                            
+                            % Set save filename
+                            fname = d;
+                            fields = fieldnames(p);
+                            fields(find(strcmp(fields, 'fname'))) = [];
+                            for fn = fields'
+                                val = p.(fn{1});
+                                if isnumeric(val)
+                                    val = num2str(val);
+                                end
+                                fname = strcat(fname, '_', fn{1}, '-', val);
                             end
-%                         end
+                            p.fname = fname;
+                            clear fname
+                            param(iStim, iInt, sORNtoORN, sORNtoLNPN, sPN, sLNtoORN, sLNtoLNPN) = p;
+                        end
                     end
                 end
             end
         end
     end
 end
+
 %% Do some stuff to figure out how many batches, runs / batch, and their allocation
 
 % Reshape run parameters so they can be more easily allocated to jobs
@@ -101,7 +77,7 @@ nModels = length(param);
 
 % Set number of runs per job, check to make sure # jobs doesn't exceed set
 % number.
-nRunsPerJob = 50;
+nRunsPerJob = 25;
 nJobs = ceil(nModels / nRunsPerJob);
 if nJobs > 300
     error('Number of jobs to be requested exceeds 300.')
@@ -121,7 +97,7 @@ for iRun = 1:nJobs
 end
 
 %% Set job (not run) parameters
-memGB = 4;
+memGB = 3;
 % timeLimitMin = 4 * nRunsPerJob; % Assuming a max of four minutes per model run
 timeLimitMin = 600; % Assuming a max of four minutes per model run
 queueName = 'short';
