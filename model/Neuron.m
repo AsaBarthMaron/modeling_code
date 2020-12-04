@@ -11,6 +11,8 @@ classdef Neuron < handle
         Tau             % Time constant of neuron
         TauKrn          % Dynamics kernel
         Inhibition
+        PreAch
+        FilteredInput
         Inputs          % Connection weights from other neurons in Network
         Vm              % Proxy for subthreshold voltage (not in proper units)
         FR              % Proxy for firing rate (not necessarily in spk/s)
@@ -34,6 +36,7 @@ classdef Neuron < handle
             n.TauKrn = exp((1:300)/n.Tau);
             n.TauKrn = n.TauKrn ./ sum(n.TauKrn);
             n.Inhibition = zeros(n.NSteps, 1);
+            n.PreAch = zeros(n.NSteps, 1);
             n.Inputs = [];
             n.Vm = zeros(n.NSteps, 1);
             n.FR = zeros(n.NSteps, 1);
@@ -51,23 +54,24 @@ classdef Neuron < handle
             n.Vm(timeStep) = n.Inputs' * networkActivity(:, timeStep -1);
         end
         
-        function n = calcResponses(n, networkActivity, timeStep, notDiv)
+        function n = filterInput(n, networkActivity, timeStep)
+            filteredInput =  networkActivity(:, timeStep-length(n.TauKrn):timeStep-1)...
+                             .* n.TauKrn;
+            filteredInput = sum(filteredInput, 2);
+            n.FilteredInput = filteredInput;
+        end
+        
+        function n = calcResponses(n, timeStep, notDiv)
             %  CALCRESPONSES calculates the responses (Vm) using linear
             %  integration and filters with TauKrn. Inhibitory (input)
             %  connections can be either subtractive or divisive, as 
             %  specified by the logical vector isDiv. 
-            filteredInput =  networkActivity(:, timeStep-length(n.TauKrn):timeStep-1)...
-                             .* n.TauKrn;
-            filteredInput = sum(filteredInput, 2);
-            n.Vm(timeStep) = n.Inputs(notDiv)' * filteredInput(notDiv);
+            n.Vm(timeStep) = n.Inputs(notDiv)' * n.FilteredInput(notDiv);
         end
         
-        function n = divInhibition(n, networkActivity, timeStep, isDiv)
+        function n = divInhibition(n, timeStep, isDiv)
             %  DESCRIPTION GOES HERE
-            filteredInput =  networkActivity(:, timeStep-length(n.TauKrn):timeStep-1)...
-                             .* n.TauKrn;
-            filteredInput = sum(filteredInput, 2);
-            inhibition = abs(n.Inputs(isDiv))' * filteredInput(isDiv);
+            inhibition = abs(n.Inputs(isDiv))' * n.FilteredInput(isDiv);
 %             inhibition = inhibition * 1e-3;
             
             n.Inhibition(timeStep) = inhibition;
@@ -77,6 +81,19 @@ classdef Neuron < handle
 %                 n.FR(timeStep) = n.FR(timeStep);
             end
         end
+        
+        function n = multPre(n, timeStep, isMult)
+            %  DESCRIPTION GOES HERE
+            preAch = abs(n.Inputs(isMult))' * n.FilteredInput(isMult);
+%             inhibition = inhibition * 1e-3;
+            
+            n.PreAch(timeStep) = preAch;
+            if preAch > 1 
+                n.Rel(timeStep) = n.Rel(timeStep) * preAch;
+            else
+%                 n.FR(timeStep) = n.FR(timeStep);
+            end
+                end
         
         function n = tauIntegrate(n, networkActivity, timeStep)
             %  TAUINTEGRATE filters Vm using dynamics kernel TauKrn

@@ -26,14 +26,20 @@ timeStep = 1;   % Sample at which to initialize model
 runTime = length(stimulus); % Model run time (in samples)
 
 %% Construct network
-iORNs = 262:311;
-% iORNs = 202:251;
 
 nNeurons = length(neuronLabels);
 kernLen = 300;  % Length of kernel for endowing response dynamics. Note 
                 % that these kernels reflect a combination of membrane, 
                 % spiking, and synaptic dynamics.
                 
+iLNs = 2:198;
+iPNs = 199:261;
+iORNs = 262:311;
+isMult = false(nNeurons, nNeurons);
+isMult(iORNs, iORNs) = 1;
+isMultOrDiv = isMult + isDiv;
+% iORNs = 202:251;
+
 % Instantiate Neuron class for each neuron in network. Typically Neuron #1
 % will be the stimulus.
 for iN = 1:nNeurons
@@ -133,14 +139,19 @@ for timeStep = (kernLen + 1):runTime
 %     inputActivity(:, timeStep-1) = inputActivity(:, timeStep-1) + noise(:, timeStep-1);
 %     inputActivity(iActivityInj, timeStep-1) = inputActivity(iActivityInj, timeStep-1) + 100;
     
-    for iN = 2:length(nn)
-        nn(iN).calcResponses(inputActivity, timeStep, ~isDiv(:, iN));
+    for iN = [iLNs, iPNs]
+        nn(iN).filterInput(inputActivity, timeStep);
+        nn(iN).calcResponses(timeStep, ~isDiv(:, iN));
         nn(iN).rectify(timeStep);
         networkFR(iN, timeStep) = nn(iN).FR(timeStep); 
     end
     for iN = iORNs
+        nn(iN).filterInput(inputActivity, timeStep);
+        nn(iN).calcResponses(timeStep, ~isMultOrDiv(:, iN));
+        nn(iN).rectify(timeStep);
         nn(iN).Rel(timeStep) = nn(iN).FR(timeStep);
-        nn(iN).divInhibition(inputActivity, timeStep, isDiv(:, iN));
+        nn(iN).multPre(timeStep, isMult(:, iN));
+        nn(iN).divInhibition(timeStep, isDiv(:, iN));
         nn(iN).calcResources(timeStep);
         nn(iN).Rel(timeStep) = nn(iN).Rel(timeStep) * nn(iN).SynRes(timeStep);
         networkRelease(iN, timeStep) = nn(iN).Rel(timeStep); 

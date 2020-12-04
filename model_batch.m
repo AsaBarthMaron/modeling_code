@@ -2,8 +2,8 @@
 
 clear
 addpath(genpath('~/Modeling/modeling_code/'));
-saveDir="~/Modeling/modeling_results/2020-12-03_hemibrain_batch"
-% saveDir="/n/scratch2/anb12/modeling_results/2020-03-11_LN_activation_batch_y"
+% saveDir="~/Modeling/modeling_results/2020-12-04_hemibrain_batch"
+saveDir="/n/scratch2/anb12/modeling_results/020-12-04_hemibrain_batch"
 if ~isdir(saveDir)
     mkdir(saveDir)
 end
@@ -77,7 +77,7 @@ nModels = length(param);
 
 % Set number of runs per job, check to make sure # jobs doesn't exceed set
 % number.
-nRunsPerJob = 25;
+nRunsPerJob = 20;
 nJobs = ceil(nModels / nRunsPerJob);
 if nJobs > 300
     error('Number of jobs to be requested exceeds 300.')
